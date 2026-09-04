@@ -83,7 +83,7 @@ const liquidGlass = "bg-white/60 backdrop-blur-2xl border border-white/50 shadow
 
 
 /* ── Header ── */
-function Header({ current, nav }: { current: Page; nav: (p: Page) => void }) {
+function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) => void }) {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -108,15 +108,15 @@ function Header({ current, nav }: { current: Page; nav: (p: Page) => void }) {
       { label: "Vé Quốc Tế", enLabel: "International Flights", page: "ve-may-bay" },
     ],
     "visa": [
-      { label: "Dịch Vụ Passport", enLabel: "Passport Services", page: "visa" },
-      { label: "Tư Vấn Visa", enLabel: "Visa Consultation", page: "visa" },
+      { label: "Dịch Vụ Passport", enLabel: "Passport Services", page: "visa", tab: "Dịch vụ Passport" },
+      { label: "Tư Vấn Visa", enLabel: "Visa Consultation", page: "visa", tab: "Tư vấn Visa" },
     ],
     "thong-tin": [
-      { label: "Tin Tức Du Lịch", enLabel: "Travel News", page: "thong-tin" },
-      { label: "Nhật Ký Du Lịch", enLabel: "Travel Diaries", page: "thong-tin" },
-      { label: "Cẩm Nang Du Lịch", enLabel: "Travel Guide", page: "thong-tin" },
-      { label: "Tư Vấn Du Lịch", enLabel: "Travel Advice", page: "thong-tin" },
-      { label: "Khuyến Mãi", enLabel: "Promotions", page: "thong-tin" },
+      { label: "Tin Tức Du Lịch", enLabel: "Travel News", page: "thong-tin", tab: "Tin tức du lịch" },
+      { label: "Nhật Ký Du Lịch", enLabel: "Travel Diaries", page: "thong-tin", tab: "Nhật ký du lịch" },
+      { label: "Cẩm Nang Du Lịch", enLabel: "Travel Guide", page: "thong-tin", tab: "Cẩm nang du lịch" },
+      { label: "Tư Vấn Du Lịch", enLabel: "Travel Advice", page: "thong-tin", tab: "Tư vấn du lịch" },
+      { label: "Khuyến Mãi", enLabel: "Promotions", page: "thong-tin", tab: "Khuyến mãi" },
     ]
   };
 
@@ -193,8 +193,8 @@ function Header({ current, nav }: { current: Page; nav: (p: Page) => void }) {
                     <div className="backdrop-blur-3xl border border-white/50 rounded-2xl shadow-2xl py-3 min-w-[240px] bg-white/95 ring-1 ring-black/5 overflow-hidden">
                       {subMenus[item.page].map((sub) => (
                         <div key={t(lang, sub.label, sub.enLabel)} className="group/sub relative">
-                          <button 
-                            onClick={() => { nav(sub.page); setActiveMenu(null); }}
+                          <button
+                            onClick={() => { nav(sub.page, (sub as any).tab); setActiveMenu(null); }}
                             className="w-full text-left px-6 py-2.5 text-[13px] font-bold text-[#003B5C] hover:bg-gradient-to-r hover:from-[#1e64ae] hover:to-[#77c14d] hover:text-white transition-all flex items-center justify-between"
                           >
                             {t(lang, sub.label, sub.enLabel)}
@@ -308,7 +308,7 @@ function Header({ current, nav }: { current: Page; nav: (p: Page) => void }) {
                     {subMenus[item.page].map((sub) => (
                       <div key={t(lang, sub.label, sub.enLabel)} className="flex flex-col">
                         <button 
-                          onClick={() => { if(!sub.sub) { nav(sub.page); setOpen(false); } }}
+                          onClick={() => { if(!sub.sub) { nav(sub.page, (sub as any).tab); setOpen(false); } }}
                           className="text-left px-4 py-2 text-[13px] font-bold text-[#003B5C]/80 hover:text-[#1e64ae] hover:bg-blue-50 rounded-lg transition-colors flex justify-between items-center"
                         >
                           {t(lang, sub.label, sub.enLabel)}
@@ -549,7 +549,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                 className="bg-gradient-to-r from-[#1e64ae] to-[#77c14d] text-white font-extrabold px-10 py-4 rounded-2xl transition-all shadow-[0_10px_30px_rgba(30,100,174,0.4)] text-sm md:text-base tracking-wide uppercase"
               >{t(lang, "ĐĂNG KÝ NGAY ĐỂ NHẬN ƯU ĐÃI", "REGISTER NOW FOR OFFERS")}</Motion.button>
               <Motion.button 
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.3)" }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => nav("lien-he")} 
                 className={`${glass} bg-white/10 text-white font-bold px-10 py-4 rounded-2xl transition-all text-sm md:text-base tracking-wide border-white/50 backdrop-blur-2xl hover:border-white shadow-xl`}
@@ -888,6 +888,8 @@ function AppContent() {
   const { lang, setLang } = useLang();
 
   const [page, setPage] = useState<Page>("home");
+  const [visaTab, setVisaTab] = useState<string>("Tư vấn Visa");
+  const [thongTinTab, setThongTinTab] = useState<string>("Tất cả");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isPromoOpen, setIsPromoOpen] = useState(false);
   const [dismissCount, setDismissCount] = useState(0);
@@ -958,8 +960,11 @@ function AppContent() {
     lastPromoTime.current = Date.now();
   };
 
-  const navigateTo = (p: Page) => {
+  const navigateTo = (p: Page, tab?: string) => {
     setPage(p);
+    if (tab && p === "visa") setVisaTab(tab);
+    if (tab && p === "thong-tin") setThongTinTab(tab);
+    if (!tab && p === "thong-tin") setThongTinTab("Tất cả");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -969,11 +974,11 @@ function AppContent() {
       
       {page === "home" && <HomePage nav={navigateTo} openForm={() => setIsFormOpen(true)} />}
       {page === "gioi-thieu" && <GioiThieuPage />}
-      {page.startsWith("tour") && <TourPage category={page} />}
+      {page.startsWith("tour") && <TourPage category={page} openForm={() => setIsFormOpen(true)} />}
       {page === "golf" && <GolfPage />}
       {page === "ve-may-bay" && <VeMayBayPage />}
-      {page === "visa" && <VisaPage />}
-      {page === "thong-tin" && <ThongTinPage />}
+      {page === "visa" && <VisaPage defaultTab={visaTab} />}
+      {page === "thong-tin" && <ThongTinPage defaultTab={thongTinTab} />}
       {page === "lien-he" && <LienHePage />}
       
       

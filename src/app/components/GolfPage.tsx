@@ -18,8 +18,8 @@ export function GolfPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-black text-[#003B5C] mb-4">Golf Trip Cao Cấp</h1>
-          <p className="text-gray-500 max-w-2xl mx-auto">Trải nghiệm những sân Golf đẳng cấp nhất Việt Nam và quốc tế cùng dịch vụ chuẩn 5 sao.</p>
+          <h1 className="text-4xl md:text-5xl font-black text-[#003B5C] mb-4">Sân Golf</h1>
+          <p className="text-gray-500 max-w-2xl mx-auto">GolfTrip chuyên đặt sân Golf, tour Golf, sản phẩm giải Golf và các dịch vụ chuyên về Golf...</p>
         </Motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
