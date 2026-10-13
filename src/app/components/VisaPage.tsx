@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import BannerVisa1 from "../../imports/Banner_visa.png";
-import BannerVisa2 from "../../imports/Banner_visa_2.png";
+const BannerVisa2 = BannerVisa1;
 import { motion as Motion, AnimatePresence } from "motion/react";
 import {
   CheckCircle, Calendar, Clock, ArrowRight,

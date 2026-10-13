@@ -17,21 +17,6 @@ import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import IntroVideo from "../imports/Gio__i_thie__u.mp4";
 import TeamBuildingVideo from "../imports/Teambuilding.mp4";
 import ChaoCamVideo from "../imports/Cha_o_Cam.mp4";
-import Gallery1 from "../imports/z7991040709521_0f42a9b1996bd42eca8b096a93fc2c5a.jpg";
-import Gallery2 from "../imports/z7991040772825_27e1264faabb34eec3b0edb0b9c1a07d.jpg";
-import Gallery3 from "../imports/z7991040871637_7ac325e53985e1acd1938164886cada2.jpg";
-import Gallery4 from "../imports/z7991040922622_012f57e954d70e1784a0b408b3256fed.jpg";
-import Gallery5 from "../imports/z7991040963062_37ce009bec54172d5e39c0137e7dd919.jpg";
-import Gallery6 from "../imports/z7991041008258_601e1647bd4203d58547d6ac943eb3f5.jpg";
-import Gallery7 from "../imports/z7991041068199_d03e5f0f7d693c180cbb92d7b652b197.jpg";
-import Gallery8 from "../imports/z7991041181580_50772d0657a4b04494cbc1f647f5687e.jpg";
-import Gallery9 from "../imports/z7991041223052_5166018017e81a1cddfed3cefbfe1ddf.jpg";
-import Gallery10 from "../imports/z7991041291774_0679eb22c8afbbfb82ea9bb2419ec9cd.jpg";
-import Gallery11 from "../imports/z7991041357796_502676f3f981a9fcf7ee0737362e6c22.jpg";
-import Gallery12 from "../imports/z7991041419216_311e0ba7a321e3969596934f63361a8b.jpg";
-import Gallery13 from "../imports/z7991042379061_ba96972913efff9376708c5f1b2e20e1.jpg";
-import Gallery14 from "../imports/z7991042379064_ba27b705bfee215da5a69df34eaa5379.jpg";
-import Gallery15 from "../imports/z7991042391882_068e35b2a0fe4fdeb305e3f0a042a88a.jpg";
 import LogoImage from "../imports/Logo.png";
 import PromoImage from "../imports/Gemini_Generated_Image_z8oi6gz8oi6gz8oi.png";
 import HeroImageNew from "../imports/Banner_Khuyen_mai.png.png";
@@ -43,8 +28,9 @@ import { VeMayBayPage } from "./components/VeMayBayPage";
 import { VisaPage } from "./components/VisaPage";
 import { ThongTinPage } from "./components/ThongTinPage";
 import { LienHePage } from "./components/LienHePage";
+import { ThuVienAnhPage } from "./components/ThuVienAnhPage";
 
-type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he";
+export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
 
 const NAV: { label: string; enLabel: string; page: Page }[] = [
   { label: "Trang Chủ", enLabel: "Home", page: "home" },
@@ -117,6 +103,7 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
       { label: "Cẩm Nang Du Lịch", enLabel: "Travel Guide", page: "thong-tin", tab: "Cẩm nang du lịch" },
       { label: "Tư Vấn Du Lịch", enLabel: "Travel Advice", page: "thong-tin", tab: "Tư vấn du lịch" },
       { label: "Khuyến Mãi", enLabel: "Promotions", page: "thong-tin", tab: "Khuyến mãi" },
+      { label: "Thư viện ảnh", enLabel: "Photo Gallery", page: "thu-vien-anh" },
     ]
   };
 
@@ -437,7 +424,6 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
   const [type, setType] = useState("");
   const [date, setDate] = useState("");
   const [heroIndex, setHeroIndex] = useState(0);
-  const [showAllPhotos, setShowAllPhotos] = useState(false);
 
   const heroBanners = [
     HeroImageNew,
@@ -626,45 +612,8 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         </Motion.div>
       </section>
 
-      {/* ── Video Section ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-24 mb-16">
-        <Motion.div 
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
-          variants={fadeInUp}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-black text-[#003B5C] mb-4">{t(lang, "Trải Nghiệm Cùng Én Việt", "Experience with Én Việt")}</h2>
-          <div className="w-24 h-1 bg-[#00A651] mx-auto rounded-full" />
-        </Motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { src: IntroVideo, title: t(lang, "Giới Thiệu Én Việt Group", "About Én Việt Group") },
-            { src: TeamBuildingVideo, title: t(lang, "Teambuilding & Sự Kiện", "Teambuilding & Events") },
-            { src: ChaoCamVideo, title: t(lang, "Khám Phá Các Điểm Đến", "Explore Destinations") }
-          ].map((vid, idx) => (
-            <Motion.div 
-              key={idx}
-              variants={fadeInUp}
-              initial="hidden" whileInView="visible" viewport={{ once: true }}
-              className="rounded-[2rem] overflow-hidden shadow-2xl relative group bg-black"
-            >
-              <video 
-                src={vid.src} 
-                className="w-full aspect-video object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" 
-                controls 
-                preload="metadata"
-              />
-              <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20">
-                {vid.title}
-              </div>
-            </Motion.div>
-          ))}
-        </div>
-      </section>
-
       {/* ── Featured Tours ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-32 mb-24 overflow-visible">
+      <section className="max-w-7xl mx-auto px-4 mt-24 mb-20 overflow-visible">
         <Motion.div 
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
@@ -737,55 +686,41 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         </Motion.div>
       </section>
 
-      {/* ── Photo Gallery Section ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-24 mb-24">
+      {/* ── Video Section ── */}
+      <section className="max-w-7xl mx-auto px-4 mt-8 mb-24">
         <Motion.div 
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
           className="text-center mb-12"
         >
-          <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#77c14d] text-sm font-extrabold tracking-[0.2em] uppercase mb-3 drop-shadow-sm inline-block">{t(lang, "Thư Viện Hình Ảnh", "Photo Gallery")}</p>
-          <h2 className="text-4xl md:text-5xl font-black text-[#003B5C] mb-4">{t(lang, "Khoảnh Khắc Đáng Nhớ", "Unforgettable Moments")}</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-[#003B5C] mb-4">{t(lang, "Trải Nghiệm Cùng Én Việt", "Experience with Én Việt")}</h2>
           <div className="w-24 h-1 bg-[#00A651] mx-auto rounded-full" />
         </Motion.div>
         
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-          {(showAllPhotos ? [
-            Gallery1, Gallery2, Gallery3, Gallery4, Gallery5,
-            Gallery6, Gallery7, Gallery8, Gallery9, Gallery10,
-            Gallery11, Gallery12, Gallery13, Gallery14, Gallery15
-          ] : [
-            Gallery1, Gallery2, Gallery3, Gallery4, Gallery5, Gallery6, Gallery7, Gallery8]).map((img, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { src: IntroVideo, title: t(lang, "Giới Thiệu Én Việt Group", "About Én Việt Group") },
+            { src: TeamBuildingVideo, title: t(lang, "Teambuilding & Sự Kiện", "Teambuilding & Events") },
+            { src: ChaoCamVideo, title: t(lang, "Khám Phá Các Điểm Đến", "Explore Destinations") }
+          ].map((vid, idx) => (
             <Motion.div 
               key={idx}
               variants={fadeInUp}
               initial="hidden" whileInView="visible" viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-              className="break-inside-avoid rounded-[1.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 relative group cursor-pointer"
+              className="rounded-[2rem] overflow-hidden shadow-2xl relative group bg-black"
             >
-              <img 
-                src={img} 
-                alt={`Khoảnh khắc Én Việt ${idx + 1}`} 
-                className="w-full h-auto object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out" 
+              <video 
+                src={vid.src} 
+                className="w-full aspect-video object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" 
+                controls 
+                preload="metadata"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#003B5C]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20">
+                {vid.title}
+              </div>
             </Motion.div>
           ))}
         </div>
-
-        <Motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-12 flex justify-center"
-        >
-          <button 
-            onClick={() => setShowAllPhotos(!showAllPhotos)}
-            className="bg-white border-2 border-[#1e64ae] text-[#1e64ae] hover:bg-[#1e64ae] hover:text-white font-black px-8 py-3 rounded-full transition-all duration-300 shadow-md flex items-center gap-2"
-          >
-            {showAllPhotos ? t(lang, "Thu gọn", "Collapse") : t(lang, "Xem tất cả hình ảnh", "View all photos")}
-          </button>
-        </Motion.div>
       </section>
 
       {/* ── Customer Reviews ── */}
@@ -979,6 +914,7 @@ function AppContent() {
       {page === "ve-may-bay" && <VeMayBayPage />}
       {page === "visa" && <VisaPage defaultTab={visaTab} />}
       {page === "thong-tin" && <ThongTinPage defaultTab={thongTinTab} />}
+      {page === "thu-vien-anh" && <ThuVienAnhPage nav={navigateTo} />}
       {page === "lien-he" && <LienHePage />}
       
       

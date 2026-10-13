@@ -1,0 +1,7 @@
+{
+  "name": "Du Lich En Viet",
+  "description": "Nền tảng du lịch Én Việt - Cung cấp tour du lịch trong nước, tour nước ngoài, đặt vé máy bay và dịch vụ visa chuyên nghiệp.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
