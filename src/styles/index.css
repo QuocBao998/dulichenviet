@@ -1,3 +1,35 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* ── Liquid Glass Design System ── */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 20px 45px -15px rgba(0, 59, 92, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+.liquid-glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 15px 35px -8px rgba(0, 59, 92, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass-card:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 25px 50px -10px rgba(30, 100, 174, 0.16), 0 0 24px rgba(0, 166, 81, 0.1);
+}
+
+.liquid-glass-pill {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Search, Phone, Mail, MapPin, Menu, X, ArrowRight,
   Plane, Globe, Users, Star, Calendar, Clock, ChevronDown,
@@ -29,6 +29,9 @@ import { VisaPage } from "./components/VisaPage";
 import { ThongTinPage } from "./components/ThongTinPage";
 import { LienHePage } from "./components/LienHePage";
 import { ThuVienAnhPage } from "./components/ThuVienAnhPage";
+import { ALL_TOURS, TOUR_DATASET, TourItem } from "../data/toursData";
+import { LiquidTourCard } from "./components/LiquidTourCard";
+import { LiquidTourModal } from "./components/LiquidTourModal";
 
 export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
 
@@ -441,40 +444,37 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
     return () => clearTimeout(timer);
   }, [heroIndex]);
 
-  const featuredTours = [
-    {
-      img: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=800&q=80",
-      country: "🇯🇵 Nhật Bản",
-      title: "Khám Phá Nhật Bản – Mùa Hoa Tử Đằng Tuyệt Đẹp",
-      duration: "6N5Đ",
-      price: "45.888.000đ",
-      tag: "Hot",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1752228898255-edf840342a9d?w=800&q=80",
-      country: "🇹🇷 Thổ Nhĩ Kỳ",
-      title: "Hành Trình Vàng Istanbul – Cappadocia",
-      duration: "8N7Đ",
-      price: "48.800.000đ",
-      tag: "Mới",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800&q=80",
-      country: "🇹🇭 Thái Lan",
-      title: "Bangkok – Pattaya Thiên Đường Mua Sắm 2026",
-      duration: "5N4Đ",
-      price: "7.490.000đ",
-      tag: "Giá Tốt",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1688952397229-d4260e2630ba?w=800&q=80",
-      country: "🇻🇳 Việt Nam",
-      title: "Săn Mây Trùng Điệp Đà Lạt – Langbiang",
-      duration: "3N2Đ",
-      price: "2.790.000đ",
-      tag: "Nội Địa",
-    },
-  ];
+  const [selectedHomeTour, setSelectedHomeTour] = useState<TourItem | null>(null);
+
+  // Cụm 1: Tour Nổi Bật Nhất (Trùng khớp 4 card trong hình người dùng chụp)
+  const noiBatTours = useMemo(() => {
+    return [
+      ALL_TOURS.find(t => t.id === "tour-19")!, // Khám Phá Nhật Bản – Mùa Hoa Tử Đằng Tuyệt Đẹp (45.888.000đ)
+      ALL_TOURS.find(t => t.id === "tour-15")!, // Hành Trình Vàng Istanbul – Cappadocia (48.800.000đ)
+      ALL_TOURS.find(t => t.title.includes("Bangkok – Pattaya Thiên Đường Mua Sắm"))!, // Bangkok - Pattaya 2026 (7.490.000đ)
+      ALL_TOURS.find(t => t.title.includes("Săn Mây Trùng Điệp Đà Lạt"))!, // Săn Mây Trùng Điệp Đà Lạt (2.790.000đ)
+    ].filter(Boolean);
+  }, []);
+
+  // Cụm 2: TREND TOUR (Các điểm đến đang sốt dẻo & thịnh hành nhất)
+  const trendTours = useMemo(() => {
+    return [
+      ALL_TOURS.find(t => t.id === "tour-21")!, // Phượng Hoàng Cổ Trấn – Trương Gia Giới (16.990.000đ)
+      ALL_TOURS.find(t => t.id === "tour-12")!, // Khám Phá Phuket – Phi Phi (11.690.000đ)
+      ALL_TOURS.find(t => t.id === "tour-16")!, // Hành Trình Di Sản Vân Nam (Lệ Giang – Shangrila) (19.490.000đ)
+      ALL_TOURS.find(t => t.title.includes("Hàn Quốc Mùa Đông: Seoul")) || ALL_TOURS.find(t => t.id === "tour-18")!, // Hàn Quốc Trượt Tuyết Elysian (15.900.000đ)
+    ].filter(Boolean);
+  }, []);
+
+  // Cụm 3: TOUR ĐỘC NHẤT (Hành trình độc lạ, siêu phẩm công nghệ, độc bản thượng lưu)
+  const docNhatTours = useMemo(() => {
+    return [
+      ALL_TOURS.find(t => t.id === "tour-11")!, // Khám Phá Đô Thị Hiện Đại Trung Quốc (Drone giao hàng, hầm vượt biển) (Giá Liên Hệ)
+      ALL_TOURS.find(t => t.id === "tour-22")!, // Hành Trình Tây Âu: Pháp – Thụy Sỹ – Ý – Vatican (75.900.000đ)
+      ALL_TOURS.find(t => t.id === "tour-17")!, // Hành Trình Di Sản Vân Nam (Lệ Giang – Đại Lý – Shangrila) (21.490.000đ)
+      ALL_TOURS.find(t => t.id === "tour-14")!, // Hong Kong – Chu Hải – Thâm Quyến – Quảng Châu (Cầu vượt biển dài nhất) (18.990.000đ)
+    ].filter(Boolean);
+  }, []);
 
   const reasons = [
     { icon: <Award className="w-8 h-8" />, title: "20+ Năm Kinh Nghiệm", desc: "Đội ngũ hướng dẫn viên chuyên nghiệp, am hiểu sâu s���c từng điểm đến." },
@@ -602,8 +602,12 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
               <Motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => nav("tour")}
-                className="w-full h-[54px] bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white font-black text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20 uppercase tracking-wide"
+                onClick={() => {
+                  if (type.includes("Trong Nước")) nav("tour-trong-nuoc");
+                  else if (type.includes("Ngoài Nước") || dest) nav("tour-nuoc-ngoai");
+                  else nav("tour");
+                }}
+                className="w-full h-[54px] bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white font-black text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20 uppercase tracking-wide cursor-pointer"
               >
                 <Search className="w-5 h-5" /> {t(lang, "Tìm Kiếm", "Search")}
               </Motion.button>
@@ -612,79 +616,134 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         </Motion.div>
       </section>
 
-      {/* ── Featured Tours ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-24 mb-20 overflow-visible">
+      {/* ── CỤM 1: Tour Nổi Bật Nhất ── */}
+      <section className="max-w-7xl mx-auto px-4 mt-24 mb-16 overflow-visible">
         <Motion.div 
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4"
+          className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
         >
           <div>
-            <p className="text-[#00A651] text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}</p>
-            <h2 className="text-4xl md:text-5xl font-black text-[#003B5C] tracking-tight">{t(lang, "Tour Nổi Bật Nhất", "Most Featured Tours")}</h2>
+            <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+            </p>
+            <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight">
+              {t(lang, "Tour Nổi Bật Nhất", "Most Featured Tours")}
+            </h2>
           </div>
-          <button onClick={() => nav("tour")} className="text-[#1e64ae] font-bold text-sm flex items-center gap-2 hover:gap-4 transition-all group bg-blue-50 px-5 py-2.5 rounded-full hover:bg-blue-100"> {t(lang, "Xem tất cả hành trình", "View all tours")} <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
+          <button 
+            onClick={() => nav("tour-nuoc-ngoai")} 
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+          >
+            <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
+            <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
           </button>
         </Motion.div>
 
-        <Motion.div 
-          variants={staggerContainer} 
-          initial="hidden" 
-          whileInView="visible" 
-          viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-1000"
-        >
-          {featuredTours.map((tour) => (
-            <Motion.div
-              key={tour.title}
-              variants={popOut}
-              whileHover={{ y: -12, scale: 1.02, rotateX: 2, rotateY: -2 }}
-              className="group cursor-pointer rounded-[2rem] overflow-hidden bg-white border border-gray-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col"
-              onClick={() => nav("tour")}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div className="relative h-60 overflow-hidden">
-                <img src={tour.img} alt={tour.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#001D2E]/80 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                  <span className={`text-[11px] font-black px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-md uppercase tracking-wide ${
-                    tour.tag === "Hot" ? "bg-red-500/90 text-white" :
-                    tour.tag === "Mới" ? "bg-[#00A651]/90 text-white" :
-                    tour.tag === "Giá Tốt" ? "bg-amber-400/90 text-[#003B5C]" :
-                    "bg-white/90 text-[#003B5C]"
-                  }`}>{tour.tag} {tour.tag === "Hot" && <img src={HotIcon} className="w-4 h-4 inline-block ml-1 -mt-1 drop-shadow-sm" alt="hot" />}</span>
-                  <div className="bg-white/20 backdrop-blur-md rounded-full p-2 text-white shadow-sm border border-white/30">
-                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  </div>
-                </div>
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <span className="text-white text-xs font-bold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">{tour.country}</span>
-                </div>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <h3 className="font-extrabold text-[#003B5C] text-lg leading-snug mb-4 line-clamp-2 group-hover:text-[#1e64ae] transition-colors">{tour.title}</h3>
-                <div className="mt-auto">
-                  <div className="flex items-center gap-3 text-xs font-semibold text-gray-500 mb-4 bg-gray-50 p-3 rounded-xl">
-                    <div className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#00A651]" /> {tour.duration}</div>
-                    <div className="w-1 h-1 rounded-full bg-gray-300" />
-                    <div className="flex items-center gap-1.5"><Plane className="w-4 h-4 text-[#1e64ae]" /> {t(lang, "Bay khứ hồi", "Round trip")}</div>
-                  </div>
-                  <div className="flex items-end justify-between">
-                    <div>
-                      <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">{t(lang, "Giá từ", "From")}</div>
-                      <div className="text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651] font-black text-xl">{tour.price}</div>
-                    </div>
-                    <div className="bg-blue-50 text-[#1e64ae] group-hover:bg-[#1e64ae] group-hover:text-white p-3 rounded-xl transition-colors shadow-sm">
-                      <ArrowRight className="w-5 h-5" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Motion.div>
+        {/* 4 Cards Grid matching screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {noiBatTours.map((tour, index) => (
+            <LiquidTourCard
+              key={tour.id}
+              tour={tour}
+              index={index}
+              badgeType={index === 0 ? "hot" : index === 1 ? "new" : index === 2 ? "price" : "trend"}
+              onSelect={(t) => setSelectedHomeTour(t)}
+              onBook={(t) => setSelectedHomeTour(t)}
+            />
           ))}
-        </Motion.div>
+        </div>
       </section>
+
+      {/* ── CỤM 2: TREND TOUR ── */}
+      <section className="max-w-7xl mx-auto px-4 my-16 overflow-visible">
+        <Motion.div 
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
+          variants={fadeInUp}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+        >
+          <div>
+            <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+            </p>
+            <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
+              {t(lang, "TREND TOUR", "Trending Tours")}
+            </h2>
+          </div>
+          <button 
+            onClick={() => nav("tour-nuoc-ngoai")} 
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+          >
+            <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
+            <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
+          </button>
+        </Motion.div>
+
+        {/* 4 Cards Grid matching screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {trendTours.map((tour, index) => (
+            <LiquidTourCard
+              key={tour.id}
+              tour={tour}
+              index={index}
+              badgeType={index === 0 ? "trend" : index === 1 ? "price" : index === 2 ? "hot" : "price"}
+              onSelect={(t) => setSelectedHomeTour(t)}
+              onBook={(t) => setSelectedHomeTour(t)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ── CỤM 3: TOUR ĐỘC NHẤT ── */}
+      <section className="max-w-7xl mx-auto px-4 my-16 overflow-visible">
+        <Motion.div 
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
+          variants={fadeInUp}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+        >
+          <div>
+            <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+            </p>
+            <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
+              {t(lang, "TOUR ĐỘC NHẤT", "Exclusive Tours")}
+            </h2>
+          </div>
+          <button 
+            onClick={() => nav("tour-nuoc-ngoai")} 
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+          >
+            <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
+            <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
+          </button>
+        </Motion.div>
+
+        {/* 4 Cards Grid matching screenshot */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {docNhatTours.map((tour, index) => (
+            <LiquidTourCard
+              key={tour.id}
+              tour={tour}
+              index={index}
+              badgeType={index === 0 ? "unique" : index === 1 ? "unique" : index === 2 ? "new" : "hot"}
+              onSelect={(t) => setSelectedHomeTour(t)}
+              onBook={(t) => setSelectedHomeTour(t)}
+            />
+          ))}
+        </div>
+
+      </section>
+
+      {/* ── Home Page Tour Detail Modal ── */}
+      <AnimatePresence>
+        {selectedHomeTour && (
+          <LiquidTourModal
+            tour={selectedHomeTour}
+            onClose={() => setSelectedHomeTour(null)}
+            openForm={openForm}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ── Video Section ── */}
       <section className="max-w-7xl mx-auto px-4 mt-8 mb-24">
