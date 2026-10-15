@@ -1,6 +1,6 @@
 import React from "react";
 import { motion as Motion } from "motion/react";
-import { Clock, Plane, ArrowRight, Star } from "lucide-react";
+import { Clock, Plane, ArrowRight, Star, CheckCircle } from "lucide-react";
 import { TourItem } from "../../data/toursData";
 import { useLang, t } from "../App";
 
@@ -12,7 +12,8 @@ interface LiquidTourCardProps {
   badgeType?: "hot" | "new" | "price" | "local" | "trend" | "unique";
 }
 
-export function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }: LiquidTourCardProps) {
+export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardProps>(
+  function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }, ref) {
   const { lang } = useLang();
   const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
 
@@ -87,6 +88,8 @@ export function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }:
 
   return (
     <Motion.div
+      ref={ref}
+      layout
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
@@ -98,8 +101,11 @@ export function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }:
       {/* ── Media slot with Top & Bottom Overlays ── */}
       <div className="relative h-60 md:h-64 w-full overflow-hidden shrink-0 rounded-t-[2.2rem]">
         <img
-          src={tour.image}
+          src={tour.image || "https://placehold.co/600x400"}
           alt={tour.title}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "https://placehold.co/600x400";
+          }}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
           loading="lazy"
         />
@@ -150,6 +156,18 @@ export function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }:
               </span>
             </div>
           </div>
+
+          {/* Key Highlights list matching snippet */}
+          {tour.highlights && tour.highlights.length > 0 && (
+            <ul className="text-xs text-gray-600 mb-5 space-y-1.5 min-h-[4.2rem]">
+              {tour.highlights.slice(0, 3).map((item, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-[#00A651] shrink-0 mt-0.5" />
+                  <span className="line-clamp-1 font-medium text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Price & Arrow Action Button */}
@@ -184,4 +202,6 @@ export function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }:
       </div>
     </Motion.div>
   );
-}
+});
+
+LiquidTourCard.displayName = "LiquidTourCard";

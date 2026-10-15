@@ -89,7 +89,7 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
 
       // 2. Price Filter
       if (selectedPriceRange !== "all") {
-        const foundRange = PRICE_RANGES.find(r => r.label === selectedPriceRange);
+        const foundRange = PRICE_RANGES.find(r => r.id === selectedPriceRange);
         if (foundRange) {
           if (foundRange.min === -1) {
             // Price on contact
@@ -103,9 +103,9 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
 
       // 3. Duration Filter
       if (selectedDuration !== "all") {
-        const durConfig = DURATION_FILTERS.find(d => d.value === selectedDuration);
-        if (durConfig && durConfig.days) {
-          if (!durConfig.days.includes(tour.durationDays)) {
+        const durConfig = DURATION_FILTERS.find(d => d.id === selectedDuration);
+        if (durConfig) {
+          if (tour.durationDays < durConfig.minDays || tour.durationDays > durConfig.maxDays) {
             return false;
           }
         }
@@ -283,33 +283,27 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
               )}
             </div>
 
-            {/* ── Liquid Glass Sidebar Filter ── */}
+            {/* ── Liquid Glass Sidebar Filter (Matching User Screenshot) ── */}
             <Motion.aside
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
-              className={`w-full lg:w-[300px] shrink-0 rounded-3xl p-6 transition-all duration-300 lg:sticky lg:top-28 self-start z-30 ${
+              className={`w-full lg:w-[320px] shrink-0 rounded-[2.2rem] p-6 lg:p-7 transition-all duration-300 lg:sticky lg:top-28 self-start z-30 bg-white border border-gray-100 shadow-[0_15px_45px_-10px_rgba(0,59,92,0.08)] ${
                 mobileFilterOpen ? "block" : "hidden lg:block"
               }`}
-              style={{
-                background: "rgba(255, 255, 255, 0.75)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(255, 255, 255, 0.85)",
-                boxShadow: "0 20px 45px -15px rgba(0, 59, 92, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.6) inset"
-              }}
             >
-              <div className="flex items-center justify-between mb-5 pb-4 border-b border-gray-200/60">
-                <div className="flex items-center gap-2">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-5 border-b border-gray-100 mb-6">
+                <div className="flex items-center gap-2.5">
                   <SlidersHorizontal className="w-5 h-5 text-[#00A651]" />
-                  <h3 className="font-black text-base text-[#003B5C]">
+                  <h3 className="font-black text-lg text-[#003B5C]">
                     {t(lang, "Bộ Lọc Hành Trình", "Tour Filters")}
                   </h3>
                 </div>
                 {activeFilterCount > 0 && (
                   <button
                     onClick={clearAllFilters}
-                    className="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1"
+                    className="text-xs font-bold text-red-500 hover:text-red-700 flex items-center gap-1 cursor-pointer"
                   >
                     <RotateCcw className="w-3 h-3" />
                     <span>{t(lang, "Đặt lại", "Reset")}</span>
@@ -317,186 +311,159 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
                 )}
               </div>
 
-              {/* 1. Keyword search */}
-              <div className="mb-5">
-                <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-wider block mb-2">
-                  {t(lang, "Từ khoá tìm kiếm", "Search Keyword")}
+              {/* 1. TỪ KHOÁ TÌM KIẾM */}
+              <div className="mb-6">
+                <label className="text-xs font-black text-[#003B5C]/80 uppercase tracking-wider block mb-2.5">
+                  {t(lang, "TỪ KHOÁ TÌM KIẾM", "SEARCH KEYWORD")}
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
-                    placeholder={t(lang, "Tên tour, điểm đến, Phú Sĩ...", "Name, highlight...")}
-                    className="w-full pl-9 pr-8 py-3 rounded-2xl text-xs font-bold text-[#003B5C] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00A651]/30 transition-all"
-                    style={{
-                      background: "rgba(255, 255, 255, 0.9)",
-                      border: "1px solid rgba(255, 255, 255, 0.9)",
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.02)"
-                    }}
+                    placeholder={t(lang, "Tên tour, điểm đến, Phú Sĩ...", "Tour name, destination...")}
+                    className="w-full pl-10 pr-9 py-3 rounded-2xl text-xs font-bold text-[#003B5C] placeholder:text-gray-400 bg-white border border-gray-200/80 focus:border-[#00A651] focus:outline-none focus:ring-2 focus:ring-[#00A651]/20 transition-all shadow-xs"
                   />
-                  <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   {searchText && (
                     <button
                       onClick={() => setSearchText("")}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-4 h-4" />
                     </button>
                   )}
                 </div>
               </div>
 
-              {/* 2. Filter theo Quốc Gia (Country) */}
-              <div className="mb-5 pb-5 border-b border-gray-200/50">
-                <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-wider block mb-2 flex items-center justify-between">
-                  <span>{t(lang, "Quốc gia điểm đến", "Destination Country")}</span>
-                  <Globe className="w-3.5 h-3.5 text-[#00A651]" />
+              {/* 2. QUỐC GIA ĐIỂM ĐẾN */}
+              <div className="mb-6 pb-6 border-b border-gray-100">
+                <label className="text-xs font-black text-[#003B5C]/80 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                  <span>{t(lang, "QUỐC GIA ĐIỂM ĐẾN", "DESTINATION COUNTRY")}</span>
+                  <Globe className="w-4 h-4 text-[#00A651]" />
                 </label>
                 <div className="relative">
                   <select
                     value={selectedCountry}
                     onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="w-full pl-3 pr-8 py-3 rounded-2xl text-xs font-bold text-[#003B5C] appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1e64ae]/30 transition-all"
-                    style={{
-                      background: "rgba(255, 255, 255, 0.9)",
-                      border: "1px solid rgba(255, 255, 255, 0.9)",
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.02)"
-                    }}
+                    className="w-full pl-4 pr-10 py-3 rounded-2xl text-xs font-bold text-[#003B5C] bg-white border border-gray-200/80 appearance-none cursor-pointer focus:border-[#1e64ae] focus:outline-none focus:ring-2 focus:ring-[#1e64ae]/20 transition-all shadow-xs"
                   >
                     {COUNTRIES.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
-              {/* 3. Filter theo Mức Giá (Price) */}
-              <div className="mb-5 pb-5 border-b border-gray-200/50">
-                <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-wider block mb-2.5">
-                  {t(lang, "Mức giá trọn gói", "Price Range")}
+              {/* 3. MỨC GIÁ TRỌN GÓI */}
+              <div className="mb-6 pb-6 border-b border-gray-100">
+                <label className="text-xs font-black text-[#003B5C]/80 uppercase tracking-wider block mb-3">
+                  {t(lang, "MỨC GIÁ TRỌN GÓI", "PRICE RANGE")}
                 </label>
                 <div className="space-y-1.5">
-                  <label
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
-                      selectedPriceRange === "all"
-                        ? "bg-[#1e64ae] text-white font-bold shadow-sm"
-                        : "hover:bg-white/80 text-gray-700 font-semibold"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="price"
-                      checked={selectedPriceRange === "all"}
-                      onChange={() => setSelectedPriceRange("all")}
-                      className="sr-only"
-                    />
-                    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                      selectedPriceRange === "all" ? "border-white bg-white text-[#1e64ae]" : "border-gray-300 bg-white"
-                    }`}>
-                      {selectedPriceRange === "all" && <div className="w-1.5 h-1.5 rounded-full bg-[#1e64ae]" />}
-                    </div>
-                    <span>{t(lang, "Tất cả mức giá", "All Prices")}</span>
-                  </label>
-
                   {PRICE_RANGES.map((pr) => {
-                    const active = selectedPriceRange === pr.label;
+                    const active = selectedPriceRange === pr.id;
                     return (
                       <label
-                        key={pr.label}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
+                        key={pr.id}
+                        onClick={() => setSelectedPriceRange(pr.id)}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs cursor-pointer transition-all ${
                           active
-                            ? "bg-[#1e64ae] text-white font-bold shadow-sm"
-                            : "hover:bg-white/80 text-gray-700 font-semibold"
+                            ? "bg-[#165ba2] text-white font-bold shadow-md shadow-blue-900/15"
+                            : "text-gray-700 font-semibold hover:bg-gray-50"
                         }`}
                       >
                         <input
                           type="radio"
-                          name="price"
+                          name="price-filter"
                           checked={active}
-                          onChange={() => setSelectedPriceRange(pr.label)}
+                          onChange={() => setSelectedPriceRange(pr.id)}
                           className="sr-only"
                         />
-                        <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                          active ? "border-white bg-white text-[#1e64ae]" : "border-gray-300 bg-white"
-                        }`}>
-                          {active && <div className="w-1.5 h-1.5 rounded-full bg-[#1e64ae]" />}
+                        <div
+                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                            active
+                              ? "border-white bg-transparent"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {active && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
-                        <span>{pr.label}</span>
+                        <span className="truncate">{t(lang, pr.label, pr.en)}</span>
                       </label>
                     );
                   })}
                 </div>
               </div>
 
-              {/* 4. Filter theo Thời Gian (Duration) */}
-              <div className="mb-5 pb-5 border-b border-gray-200/50">
-                <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-wider block mb-2.5">
-                  {t(lang, "Thời gian chuyến đi", "Trip Duration")}
+              {/* 4. THỜI GIAN CHUYẾN ĐI */}
+              <div className="mb-6 pb-6 border-b border-gray-100">
+                <label className="text-xs font-black text-[#003B5C]/80 uppercase tracking-wider block mb-3">
+                  {t(lang, "THỜI GIAN CHUYẾN ĐI", "TRIP DURATION")}
                 </label>
                 <div className="space-y-1.5">
                   {DURATION_FILTERS.map((df) => {
-                    const active = selectedDuration === df.value;
+                    const active = selectedDuration === df.id;
                     return (
                       <label
-                        key={df.value}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs cursor-pointer transition-all ${
+                        key={df.id}
+                        onClick={() => setSelectedDuration(df.id)}
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs cursor-pointer transition-all ${
                           active
-                            ? "bg-[#00A651] text-white font-bold shadow-sm"
-                            : "hover:bg-white/80 text-gray-700 font-semibold"
+                            ? "bg-[#00A651] text-white font-bold shadow-md shadow-emerald-900/15"
+                            : "text-gray-700 font-semibold hover:bg-gray-50"
                         }`}
                       >
                         <input
                           type="radio"
-                          name="duration"
+                          name="duration-filter"
                           checked={active}
-                          onChange={() => setSelectedDuration(df.value)}
+                          onChange={() => setSelectedDuration(df.id)}
                           className="sr-only"
                         />
-                        <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
-                          active ? "border-white bg-white text-[#00A651]" : "border-gray-300 bg-white"
-                        }`}>
-                          {active && <div className="w-1.5 h-1.5 rounded-full bg-[#00A651]" />}
+                        <div
+                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                            active
+                              ? "border-white bg-transparent"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {active && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
-                        <span>{df.label}</span>
+                        <span className="truncate">{t(lang, df.label, df.en)}</span>
                       </label>
                     );
                   })}
                 </div>
               </div>
 
-              {/* 5. Filter theo Hãng Hàng Không */}
+              {/* 5. HÃNG HÀNG KHÔNG */}
               <div className="mb-6">
-                <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-wider block mb-2 flex items-center justify-between">
-                  <span>{t(lang, "Hãng hàng không", "Airlines")}</span>
-                  <Plane className="w-3.5 h-3.5 text-[#1e64ae]" />
+                <label className="text-xs font-black text-[#003B5C]/80 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                  <span>{t(lang, "HÃNG HÀNG KHÔNG", "AIRLINES")}</span>
+                  <Plane className="w-4 h-4 text-[#1e64ae]" />
                 </label>
                 <div className="relative">
                   <select
                     value={selectedAirline}
                     onChange={(e) => setSelectedAirline(e.target.value)}
-                    className="w-full pl-3 pr-8 py-3 rounded-2xl text-xs font-bold text-[#003B5C] appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1e64ae]/30 transition-all"
-                    style={{
-                      background: "rgba(255, 255, 255, 0.9)",
-                      border: "1px solid rgba(255, 255, 255, 0.9)",
-                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.02)"
-                    }}
+                    className="w-full pl-4 pr-10 py-3 rounded-2xl text-xs font-bold text-[#003B5C] bg-white border border-gray-200/80 appearance-none cursor-pointer focus:border-[#1e64ae] focus:outline-none focus:ring-2 focus:ring-[#1e64ae]/20 transition-all shadow-xs"
                   >
                     {availableAirlines.map((a) => (
                       <option key={a} value={a}>{a}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
-              {/* Action Button */}
+              {/* XÓA TẤT CẢ BỘ LỌC Button */}
               <button
                 onClick={clearAllFilters}
-                className="w-full py-3 rounded-2xl font-black text-xs uppercase tracking-wider text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors"
+                className="w-full py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider text-gray-600 bg-[#F3F4F6] hover:bg-gray-200 transition-colors cursor-pointer"
               >
-                {t(lang, "Xóa tất cả bộ lọc", "Clear All Filters")}
+                {t(lang, "XÓA TẤT CẢ BỘ LỌC", "CLEAR ALL FILTERS")}
               </button>
             </Motion.aside>
 

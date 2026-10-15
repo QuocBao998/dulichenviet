@@ -10,33 +10,34 @@ interface LiquidTourModalProps {
   openForm?: () => void;
 }
 
-export function LiquidTourModal({ tour, onClose, openForm }: LiquidTourModalProps) {
-  const { lang } = useLang();
-  const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
+export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalProps>(
+  function LiquidTourModal({ tour, onClose, openForm }, ref) {
+    const { lang } = useLang();
+    const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
 
-  const standardIncludes = [
-    `Phương tiện di chuyển: ${tour.airline} khứ hồi và xe đời mới chất lượng cao suốt tuyến`,
-    "Khách sạn tiêu chuẩn 3 - 5 sao tiện nghi, vị trí trung tâm",
-    "Các bữa ăn tiêu chuẩn chất lượng cao theo chương trình",
-    "Vé vào cổng tất cả các điểm tham quan theo lịch trình",
-    "Hướng dẫn viên chuyên nghiệp, nhiệt tình hỗ trợ 24/7",
-    "Bảo hiểm du lịch quốc tế tối đa 1.000.000.000 VNĐ/người/vụ",
-    "Quà tặng độc quyền: Nón du lịch Én Việt, nước suối hằng ngày"
-  ];
+    const standardIncludes = [
+      `Phương tiện di chuyển: ${tour.airline} khứ hồi và xe đời mới chất lượng cao suốt tuyến`,
+      "Khách sạn tiêu chuẩn 3 - 5 sao tiện nghi, vị trí trung tâm",
+      "Các bữa ăn tiêu chuẩn chất lượng cao theo chương trình",
+      "Vé vào cổng tất cả các điểm tham quan theo lịch trình",
+      "Hướng dẫn viên chuyên nghiệp, nhiệt tình hỗ trợ 24/7",
+      "Bảo hiểm du lịch quốc tế tối đa 1.000.000.000 VNĐ/người/vụ",
+      "Quà tặng độc quyền: Nón du lịch Én Việt, nước suối hằng ngày"
+    ];
 
-  return (
-    <>
-      {/* Backdrop */}
-      <Motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100]"
-      />
+    return (
+      <div ref={ref} className="fixed inset-0 z-[100] flex items-center justify-center">
+        {/* Backdrop */}
+        <Motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 bg-black/60 backdrop-blur-md"
+        />
 
-      {/* Modal Dialog */}
-      <div className="fixed inset-0 z-[101] flex items-center justify-center p-4 sm:p-6 overflow-y-auto pointer-events-none">
+        {/* Modal Dialog */}
+        <div className="relative z-10 w-full h-full flex items-center justify-center p-4 sm:p-6 overflow-y-auto pointer-events-none">
         <Motion.div
           initial={{ opacity: 0, scale: 0.94, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -61,7 +62,14 @@ export function LiquidTourModal({ tour, onClose, openForm }: LiquidTourModalProp
 
           {/* Header Banner */}
           <div className="relative h-60 sm:h-72 w-full overflow-hidden shrink-0">
-            <img src={tour.image} alt={tour.title} className="w-full h-full object-cover" />
+            <img 
+              src={tour.image || "https://placehold.co/600x400"} 
+              alt={tour.title} 
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "https://placehold.co/600x400";
+              }}
+              className="w-full h-full object-cover" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-[#002238] via-[#002238]/40 to-transparent" />
             
             <div className="absolute top-4 left-4 flex gap-2">
@@ -207,6 +215,8 @@ export function LiquidTourModal({ tour, onClose, openForm }: LiquidTourModalProp
           </div>
         </Motion.div>
       </div>
-    </>
+    </div>
   );
-}
+});
+
+LiquidTourModal.displayName = "LiquidTourModal";

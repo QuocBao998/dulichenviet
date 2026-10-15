@@ -446,33 +446,33 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
 
   const [selectedHomeTour, setSelectedHomeTour] = useState<TourItem | null>(null);
 
-  // Cụm 1: Tour Nổi Bật Nhất (Trùng khớp 4 card trong hình người dùng chụp)
+  // Cụm 1: Tour Nổi Bật Nhất (4 tour mới theo mã nguồn React cung cấp)
   const noiBatTours = useMemo(() => {
     return [
-      ALL_TOURS.find(t => t.id === "tour-19")!, // Khám Phá Nhật Bản – Mùa Hoa Tử Đằng Tuyệt Đẹp (45.888.000đ)
-      ALL_TOURS.find(t => t.id === "tour-15")!, // Hành Trình Vàng Istanbul – Cappadocia (48.800.000đ)
-      ALL_TOURS.find(t => t.title.includes("Bangkok – Pattaya Thiên Đường Mua Sắm"))!, // Bangkok - Pattaya 2026 (7.490.000đ)
-      ALL_TOURS.find(t => t.title.includes("Săn Mây Trùng Điệp Đà Lạt"))!, // Săn Mây Trùng Điệp Đà Lạt (2.790.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-01-harbin")!, // Xứ Sở Băng Tuyết Cáp Nhĩ Tân - Làng Tuyết Hương
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-15")!,        // Hành Trình Vàng Đến Thổ Nhĩ Kỳ: Istanbul - Cappadocia
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-16")!,        // Hành Trình Di Sản Vân Nam: Lệ Giang - Shangrila
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-20")!,        // Đón Thu Cung Đường Vàng Nhật Bản
     ].filter(Boolean);
   }, []);
 
-  // Cụm 2: TREND TOUR (Các điểm đến đang sốt dẻo & thịnh hành nhất)
+  // Cụm 2: TREND TOUR (4 tour thịnh hành, giới trẻ & gia đình săn đón)
   const trendTours = useMemo(() => {
     return [
-      ALL_TOURS.find(t => t.id === "tour-21")!, // Phượng Hoàng Cổ Trấn – Trương Gia Giới (16.990.000đ)
-      ALL_TOURS.find(t => t.id === "tour-12")!, // Khám Phá Phuket – Phi Phi (11.690.000đ)
-      ALL_TOURS.find(t => t.id === "tour-16")!, // Hành Trình Di Sản Vân Nam (Lệ Giang – Shangrila) (19.490.000đ)
-      ALL_TOURS.find(t => t.title.includes("Hàn Quốc Mùa Đông: Seoul")) || ALL_TOURS.find(t => t.id === "tour-18")!, // Hàn Quốc Trượt Tuyết Elysian (15.900.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-21")!, // Phượng Hoàng Cổ Trấn (16.990.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-12")!, // Khám Phá Phuket – Phi Phi (11.690.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-17")!, // Lệ Giang – Đại Lý – Shangrila (19.490.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-19")!, // Nhật Bản Mùa Đông Tuyết Trắng (37.888.000đ)
     ].filter(Boolean);
   }, []);
 
-  // Cụm 3: TOUR ĐỘC NHẤT (Hành trình độc lạ, siêu phẩm công nghệ, độc bản thượng lưu)
+  // Cụm 3: TOUR ĐỘC NHẤT (4 hành trình độc lạ, siêu phẩm công nghệ, độc bản thượng lưu)
   const docNhatTours = useMemo(() => {
     return [
-      ALL_TOURS.find(t => t.id === "tour-11")!, // Khám Phá Đô Thị Hiện Đại Trung Quốc (Drone giao hàng, hầm vượt biển) (Giá Liên Hệ)
-      ALL_TOURS.find(t => t.id === "tour-22")!, // Hành Trình Tây Âu: Pháp – Thụy Sỹ – Ý – Vatican (75.900.000đ)
-      ALL_TOURS.find(t => t.id === "tour-17")!, // Hành Trình Di Sản Vân Nam (Lệ Giang – Đại Lý – Shangrila) (21.490.000đ)
-      ALL_TOURS.find(t => t.id === "tour-14")!, // Hong Kong – Chu Hải – Thâm Quyến – Quảng Châu (Cầu vượt biển dài nhất) (18.990.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-11")!, // Thâm Quyến – Quảng Châu (Drone giao hàng, hầm biển)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-22")!, // Hành Trình Tây Âu: Pháp – Thụy Sỹ – Ý – Vatican (75.900.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-14")!, // Hong Kong – Chu Hải – Thâm Quyến – Quảng Châu (18.990.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-18")!, // Singapore (11.290.000đ)
     ].filter(Boolean);
   }, []);
 
@@ -630,17 +630,20 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
             <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight">
               {t(lang, "Tour Nổi Bật Nhất", "Most Featured Tours")}
             </h2>
+            <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
+              {t(lang, "Lựa chọn những hành trình tuyệt vời nhất được thiết kế riêng dành cho bạn.", "Hand-picked extraordinary travel itineraries crafted just for you.")}
+            </p>
           </div>
           <button 
             onClick={() => nav("tour-nuoc-ngoai")} 
-            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
             <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
           </button>
         </Motion.div>
 
-        {/* 4 Cards Grid matching screenshot */}
+        {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {noiBatTours.map((tour, index) => (
             <LiquidTourCard
@@ -672,14 +675,14 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
           </div>
           <button 
             onClick={() => nav("tour-nuoc-ngoai")} 
-            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
             <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
           </button>
         </Motion.div>
 
-        {/* 4 Cards Grid matching screenshot */}
+        {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {trendTours.map((tour, index) => (
             <LiquidTourCard
@@ -711,14 +714,14 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
           </div>
           <button 
             onClick={() => nav("tour-nuoc-ngoai")} 
-            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow"
+            className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
             <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
           </button>
         </Motion.div>
 
-        {/* 4 Cards Grid matching screenshot */}
+        {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {docNhatTours.map((tour, index) => (
             <LiquidTourCard
@@ -731,7 +734,6 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
             />
           ))}
         </div>
-
       </section>
 
       {/* ── Home Page Tour Detail Modal ── */}
