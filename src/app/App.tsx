@@ -33,7 +33,7 @@ import { ALL_TOURS, TOUR_DATASET, TourItem } from "../data/toursData";
 import { LiquidTourCard } from "./components/LiquidTourCard";
 import { LiquidTourModal } from "./components/LiquidTourModal";
 
-export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
+export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-trung-quoc" | "tour-han-quoc" | "tour-dong-nam-a" | "tour-chau-a" | "tour-chau-au" | "tour-chau-my" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
 
 const NAV: { label: string; enLabel: string; page: Page }[] = [
   { label: "Trang Chủ", enLabel: "Home", page: "home" },
@@ -80,8 +80,14 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
 
   const subMenus: Record<string, { label: string; enLabel: string; page: Page; sub?: { label: string; enLabel: string; page: Page }[] }[]> = {
     "tour": [
+      { label: "Tour Trung Quốc", enLabel: "China Tours", page: "tour-trung-quoc" },
+      { label: "Tour Hàn Quốc", enLabel: "Korea Tours", page: "tour-han-quoc" },
+      { label: "Tour Đông Nam Á", enLabel: "Southeast Asia Tours", page: "tour-dong-nam-a" },
+      { label: "Tour Châu Á", enLabel: "Asia Tours", page: "tour-chau-a" },
+      { label: "Tour Châu Âu", enLabel: "Europe Tours", page: "tour-chau-au" },
+      { label: "Tour Châu Mỹ", enLabel: "Americas Tours", page: "tour-chau-my" },
+      { label: "Tour Nước Ngoài (Tất Cả)", enLabel: "All International Tours", page: "tour-nuoc-ngoai" },
       { label: "Tour Trong Nước", enLabel: "Domestic Tours", page: "tour-trong-nuoc" },
-      { label: "Tour Nước Ngoài", enLabel: "International Tours", page: "tour-nuoc-ngoai" },
       { label: "Tour Giờ Chót", enLabel: "Last Minute Tours", page: "tour-gio-chot" },
       { 
         label: "Tour Hành Hương", enLabel: "Pilgrimage Tours",
@@ -446,33 +452,33 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
 
   const [selectedHomeTour, setSelectedHomeTour] = useState<TourItem | null>(null);
 
-  // Cụm 1: Tour Nổi Bật Nhất (4 tour mới theo mã nguồn React cung cấp)
+  // Cụm 1: Tour Nổi Bật Nhất (4 tour nổi bật đặc sắc: Đài Loan, Nhật Bản, Trung Quốc, Hàn Quốc)
   const noiBatTours = useMemo(() => {
     return [
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-01-harbin")!, // Xứ Sở Băng Tuyết Cáp Nhĩ Tân - Làng Tuyết Hương
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-15")!,        // Hành Trình Vàng Đến Thổ Nhĩ Kỳ: Istanbul - Cappadocia
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-16")!,        // Hành Trình Di Sản Vân Nam: Lệ Giang - Shangrila
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-20")!,        // Đón Thu Cung Đường Vàng Nhật Bản
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-tw-starlux")!,
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-jp-xuan")!,
+      (TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-cn-chengdu-jiuzhaigou-6n5d") || TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-cn-pek-sha"))!,
+      (TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-kr-everland-seoul-nami") || TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-kr-seoul-nami-autumn"))!,
     ].filter(Boolean);
   }, []);
 
-  // Cụm 2: TREND TOUR (4 tour thịnh hành, giới trẻ & gia đình săn đón)
+  // Cụm 2: TREND TOUR - TOUR CHÂU ÂU & HOA KỲ ĐẲNG CẤP
   const trendTours = useMemo(() => {
     return [
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-21")!, // Phượng Hoàng Cổ Trấn (16.990.000đ)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-12")!, // Khám Phá Phuket – Phi Phi (11.690.000đ)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-17")!, // Lệ Giang – Đại Lý – Shangrila (19.490.000đ)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-19")!, // Nhật Bản Mùa Đông Tuyết Trắng (37.888.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-us-west")!,      // Bờ Tây Hoa Kỳ (Mỹ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-tay-au")!,    // Tây Âu: Pháp - Thụy Sĩ - Ý - Vatican
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-nam-au")!,    // Nam Âu: Maroc - Tây Ban Nha - Bồ Đào Nha
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-dong-au")!,   // Đông Âu: Lãng Mạn Sông Danube
     ].filter(Boolean);
   }, []);
 
-  // Cụm 3: TOUR ĐỘC NHẤT (4 hành trình độc lạ, siêu phẩm công nghệ, độc bản thượng lưu)
+  // Cụm 3: TOUR ĐỘC BẢN & DI SẢN (Hành trình vàng thế giới)
   const docNhatTours = useMemo(() => {
     return [
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-11")!, // Thâm Quyến – Quảng Châu (Drone giao hàng, hầm biển)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-22")!, // Hành Trình Tây Âu: Pháp – Thụy Sỹ – Ý – Vatican (75.900.000đ)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-14")!, // Hong Kong – Chu Hải – Thâm Quyến – Quảng Châu (18.990.000đ)
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-18")!, // Singapore (11.290.000đ)
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-bhutan")!,                    // Bhutan Chinh Phục Tiger's Nest
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-kh-siemreap-phnompenh")!,     // Campuchia Angkor Wat
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-la-vientiane-luangprabang")!, // Lào Thác Kuang Si
+      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-15-tho-nhi-ky")!,             // Thổ Nhĩ Kỳ Hành Trình Vàng
     ].filter(Boolean);
   }, []);
 
@@ -563,7 +569,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                   value={dest} onChange={(e) => setDest(e.target.value)}
                 >
                   <option value="" className="text-gray-400">{t(lang, "Bạn muốn đi đâu?", "Where to?")}</option>
-                  {["Nhật Bản", "Thổ Nhĩ Kỳ", "Hàn Quốc", "Thái Lan", "Dubai", "Châu Âu", "Đà Lạt", "Hà Giang", "Hạ Long"].map((d) => (
+                  {["Đài Loan", "Nhật Bản", "Dubai", "Bhutan", "Thổ Nhĩ Kỳ", "Tây Âu (Pháp - Thụy Sĩ - Ý)", "Đông Âu (Áo - Séc - Đức - Hungary)", "Nam Âu (Tây Ban Nha - Bồ Đào Nha - Maroc)"].map((d) => (
                     <option key={d} value={d} className="text-[#003B5C] font-semibold">{d}</option>
                   ))}
                 </select>
@@ -579,8 +585,10 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                   value={type} onChange={(e) => setType(e.target.value)}
                 >
                   <option value="">{t(lang, "Tất cả loại tour", "All tour types")}</option>
+                  <option>{t(lang, "Tour Châu Á", "Asia Tours")}</option>
+                  <option>{t(lang, "Tour Châu Âu", "Europe Tours")}</option>
+                  <option>{t(lang, "Tour Nước Ngoài", "International")}</option>
                   <option>{t(lang, "Tour Trong Nước", "Domestic")}</option>
-                  <option>{t(lang, "Tour Ngoài Nước", "International")}</option>
                   <option>Golf Trip</option>
                   <option>{t(lang, "Hành Hương Công Giáo", "Catholic Pilgrimage")}</option>
                 </select>
@@ -617,7 +625,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
       </section>
 
       {/* ── CỤM 1: Tour Nổi Bật Nhất ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-24 mb-16 overflow-visible">
+      <section className="max-w-7xl mx-auto px-4 mt-20 mb-16 overflow-visible">
         <Motion.div 
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
@@ -625,9 +633,9 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         >
           <div>
             <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "KHÁM PHÁ NGAY", "EXPLORE NOW")}
             </p>
-            <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
               {t(lang, "Tour Nổi Bật Nhất", "Most Featured Tours")}
             </h2>
             <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
@@ -635,7 +643,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
             </p>
           </div>
           <button 
-            onClick={() => nav("tour-nuoc-ngoai")} 
+            onClick={() => nav("tour")} 
             className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
@@ -667,14 +675,17 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         >
           <div>
             <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "KHÁM PHÁ NGAY", "EXPLORE NOW")}
             </p>
             <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
-              {t(lang, "TREND TOUR", "Trending Tours")}
+              {t(lang, "TREND TOUR", "TRENDING TOURS")}
             </h2>
+            <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
+              {t(lang, "Những xu hướng du lịch được yêu thích và lựa chọn nhiều nhất trong năm.", "The most sought-after and popular travel trends of the year.")}
+            </p>
           </div>
           <button 
-            onClick={() => nav("tour-nuoc-ngoai")} 
+            onClick={() => nav("tour")} 
             className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>
@@ -706,14 +717,17 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         >
           <div>
             <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "Khám Phá Ngay", "Explore Now")}
+              <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "KHÁM PHÁ NGAY", "EXPLORE NOW")}
             </p>
             <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
-              {t(lang, "TOUR ĐỘC NHẤT", "Exclusive Tours")}
+              {t(lang, "TOUR ĐỘC NHẤT", "EXCLUSIVE TOURS")}
             </h2>
+            <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
+              {t(lang, "Khám phá những vùng đất huyền bí, di sản văn hóa thế giới và những kỳ quan độc bản.", "Explore mysterious lands, world heritage sites, and singular wonders.")}
+            </p>
           </div>
           <button 
-            onClick={() => nav("tour-nuoc-ngoai")} 
+            onClick={() => nav("tour")} 
             className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
           >
             <span>{t(lang, "Xem tất cả hành trình", "View all tours")}</span>

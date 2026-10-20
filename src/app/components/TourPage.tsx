@@ -24,6 +24,12 @@ const PAGE_TITLE: Record<string, { vi: string; en: string }> = {
   "tour":                      { vi: "Khám Phá Tất Cả Tour Du Lịch",  en: "All Travel Tours" },
   "tour-trong-nuoc":           { vi: "Tour Du Lịch Trong Nước",       en: "Domestic Tours" },
   "tour-nuoc-ngoai":           { vi: "Tour Du Lịch Nước Ngoài",       en: "International Tours" },
+  "tour-trung-quoc":           { vi: "Tour Du Lịch Trung Quốc",       en: "China Tours" },
+  "tour-han-quoc":             { vi: "Tour Du Lịch Hàn Quốc",         en: "Korea Tours" },
+  "tour-dong-nam-a":           { vi: "Tour Du Lịch Đông Nam Á",       en: "Southeast Asia Tours" },
+  "tour-chau-a":               { vi: "Tour Du Lịch Châu Á",           en: "Asia Tours" },
+  "tour-chau-au":              { vi: "Tour Du Lịch Châu Âu",          en: "Europe Tours" },
+  "tour-chau-my":              { vi: "Tour Du Lịch Châu Mỹ",          en: "Americas Tours" },
   "tour-gio-chot":             { vi: "Tour Giờ Chót – Giá Sốc",       en: "Last Minute Deals" },
   "tour-hanh-huong":           { vi: "Tour Hành Hương Tâm Linh",      en: "Pilgrimage Tours" },
   "tour-hanh-huong-cong-giao": { vi: "Tour Hành Hương Công Giáo",     en: "Catholic Pilgrimage" },
@@ -73,6 +79,24 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
     }
     if (category === "tour-nuoc-ngoai") {
       return TOUR_DATASET.Tour_Ngoai_Nuoc;
+    }
+    if (category === "tour-trung-quoc") {
+      return TOUR_DATASET.Tour_Trung_Quoc;
+    }
+    if (category === "tour-han-quoc") {
+      return TOUR_DATASET.Tour_Han_Quoc;
+    }
+    if (category === "tour-dong-nam-a") {
+      return TOUR_DATASET.Tour_Dong_Nam_A;
+    }
+    if (category === "tour-chau-a") {
+      return TOUR_DATASET.Tour_Chau_A;
+    }
+    if (category === "tour-chau-au") {
+      return TOUR_DATASET.Tour_Chau_Au;
+    }
+    if (category === "tour-chau-my") {
+      return TOUR_DATASET.Tour_Chau_My;
     }
     return ALL_TOURS;
   }, [category]);
@@ -531,7 +555,7 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
                   )}
                   {selectedDuration !== "all" && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                      <span>{DURATION_FILTERS.find(d => d.value === selectedDuration)?.label}</span>
+                      <span>{DURATION_FILTERS.find(d => d.id === selectedDuration)?.label}</span>
                       <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedDuration("all")} />
                     </span>
                   )}

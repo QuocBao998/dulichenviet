@@ -19,12 +19,25 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
 
   // Flag or country emoji
   const getCountryDisplay = (country: string) => {
-    if (country.includes("Trung Quốc")) return "🇨🇳 " + country;
-    if (country.includes("Thái Lan")) return "🇹🇭 " + country;
-    if (country.includes("Malaysia") || country.includes("Singapore")) return "🇸🇬 🇲🇾 " + country;
-    if (country.includes("Thổ Nhĩ Kỳ")) return "🇹🇷 " + country;
+    if (country.includes("Hàn Quốc")) return "🇰🇷 " + country;
+    if (country.includes("Đài Loan")) return "🇹🇼 " + country;
     if (country.includes("Nhật Bản")) return "🇯🇵 " + country;
-    if (country.includes("Tây Âu")) return "🇪🇺 " + country;
+    if (country.includes("Dubai") || country.includes("UAE")) return "🇦🇪 " + country;
+    if (country.includes("Bhutan")) return "🇧🇹 " + country;
+    if (country.includes("Trung Quốc")) return "🇨🇳 " + country;
+    if (country.includes("Hong Kong") || country.includes("HongKong")) return "🇭🇰 " + country;
+    if (country.includes("Thái Lan")) return "🇹🇭 " + country;
+    if (country.includes("Campuchia")) return "🇰🇭 " + country;
+    if (country.includes("Philippines") || country.includes("Cebu")) return "🇵🇭 " + country;
+    if (country.includes("Indonesia") || country.includes("Bali")) return "🇮🇩 " + country;
+    if (country.includes("Lào")) return "🇱🇦 " + country;
+    if (country.includes("Malaysia") || country.includes("Singapore")) return "🇸🇬 🇲🇾 " + country;
+    if (country.includes("Singapore")) return "🇸🇬 " + country;
+    if (country.includes("Thổ Nhĩ Kỳ")) return "🇹🇷 " + country;
+    if (country.includes("Tây Âu") || country.includes("Pháp")) return "🇫🇷 🇨🇭 " + country;
+    if (country.includes("Đông Âu") || country.includes("Áo") || country.includes("Đức")) return "🇦🇹 🇩🇪 " + country;
+    if (country.includes("Nam Âu") || country.includes("Tây Ban Nha") || country.includes("Bồ Đào Nha")) return "🇪🇸 🇵🇹 " + country;
+    if (country.includes("Hoa Kỳ") || country.includes("Mỹ") || country.includes("USA")) return "🇺🇸 " + country;
     if (country.includes("Việt Nam")) return "🇻🇳 " + country;
     return "✈️ " + country;
   };
