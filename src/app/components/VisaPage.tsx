@@ -302,7 +302,7 @@ const tuVanVisaPosts: BlogPost[] = [
     id: 102,
     title: "Cập nhật những thông tin thay đổi về visa Mỹ trong năm 2025",
     excerpt: "Từ đầu năm 2025, Chính phủ Hoa Kỳ đã đưa ra nhiều thay đổi quan trọng về chính sách visa ảnh hưởng trực tiếp đến người xin thị thực Việt Nam.",
-    image: "https://dulichenviet.vn/wp-content/uploads/2025/08/a.png",
+    image: "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=1000&q=80",
     date: "05/08/2025",
     readTime: "6 phút đọc",
     category: "Tư vấn Visa",
@@ -709,9 +709,12 @@ export function VisaPage({ defaultTab = "Tư vấn Visa" }: { defaultTab?: strin
               <img
                 src={featured.image}
                 alt={featured.title}
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=1000&q=80";
+                }}
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
               <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${featured.categoryColor}`}>
                 {featured.category}
               </span>
@@ -758,9 +761,12 @@ export function VisaPage({ defaultTab = "Tư vấn Visa" }: { defaultTab?: strin
                 <img
                   src={post.image}
                   alt={post.title}
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=1000&q=80";
+                  }}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
                 <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${post.categoryColor}`}>
                   {post.category}
                 </span>
@@ -864,7 +870,14 @@ function ArticleDetail({ post, onBack }: { post: BlogPost; onBack: () => void })
           className="rounded-2xl overflow-hidden mb-10 shadow-lg"
           style={{ aspectRatio: "16/9" }}
         >
-          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+          <img 
+            src={post.image} 
+            alt={post.title} 
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=1000&q=80";
+            }}
+            className="w-full h-full object-cover" 
+          />
         </Motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">

@@ -116,43 +116,92 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
     return ALL_TOURS;
   }, [category]);
 
+  // Helper function: Strict & accurate country classification
+  const matchesCountry = (tour: TourItem, targetCountry: string): boolean => {
+    if (!targetCountry || targetCountry === "Tất cả quốc gia") return true;
+
+    const target = targetCountry.trim().toLowerCase();
+    const c = tour.country.toLowerCase();
+    const title = tour.title.toLowerCase();
+    const cats = tour.cats || [];
+    const region = (tour.region || "").toLowerCase();
+
+    switch (target) {
+      case "việt nam":
+        // Strictly domestic tours (returns empty currently until user supplies domestic tour files)
+        return tour.category === "trong-nuoc" || c === "việt nam" || cats.includes("trong-nuoc") || cats.some(x => x.startsWith("mien-"));
+
+      case "trung quốc":
+        return c === "trung quốc" || cats.includes("trung-quoc") || tour.id.startsWith("tour-cn-");
+
+      case "hàn quốc":
+        return c === "hàn quốc" || cats.includes("han-quoc") || tour.id.startsWith("tour-kr-");
+
+      case "nhật bản":
+        return c === "nhật bản" || cats.includes("nhat-ban") || tour.id.startsWith("tour-jp-");
+
+      case "đài loan":
+        return c === "đài loan" || cats.includes("dai-loan") || tour.id.startsWith("tour-tw-");
+
+      case "hong kong":
+        return c === "hong kong" || c === "hongkong" || cats.includes("hong-kong") || tour.id.startsWith("tour-hk-");
+
+      case "thái lan":
+        return c === "thái lan" || cats.includes("thai-lan") || tour.id.startsWith("tour-th-");
+
+      case "singapore":
+        return c.includes("singapore") || cats.includes("singapore") || tour.id.startsWith("tour-sin-");
+
+      case "malaysia":
+        return c.includes("malaysia") || cats.includes("malaysia") || tour.id.startsWith("tour-my-");
+
+      case "indonesia":
+        return c.includes("indonesia") || cats.includes("indonesia") || tour.id.startsWith("tour-id-") || title.includes("bali");
+
+      case "philippines":
+        return c.includes("philippines") || cats.includes("philippines") || tour.id.startsWith("tour-ph-");
+
+      case "campuchia":
+        return c.includes("campuchia") || cats.includes("campuchia") || tour.id.startsWith("tour-kh-");
+
+      case "lào":
+        return c.includes("lào") || cats.includes("lao") || tour.id.startsWith("tour-la-");
+
+      case "dubai - uae":
+        return c.includes("dubai") || c.includes("uae") || tour.id.startsWith("tour-dubai");
+
+      case "bhutan":
+        return c.includes("bhutan") || tour.id.startsWith("tour-bhutan");
+
+      case "thổ nhĩ kỳ":
+        return c.includes("thổ nhĩ kỳ") || tour.id.includes("tho-nhi-ky");
+
+      case "tây âu":
+        return cats.includes("tay-au") || tour.id === "tour-eu-tay-au" || (region.includes("châu âu") && title.includes("tây âu"));
+
+      case "đông âu":
+        return cats.includes("dong-au") || tour.id === "tour-eu-dong-au" || (region.includes("châu âu") && title.includes("đông âu"));
+
+      case "nam âu":
+        return cats.includes("nam-au") || tour.id === "tour-eu-nam-au" || (region.includes("châu âu") && title.includes("nam âu"));
+
+      case "châu âu":
+        return region.includes("châu âu") || cats.includes("chau-au") || tour.id.startsWith("tour-eu-");
+
+      case "hoa kỳ":
+        return c.includes("hoa kỳ") || c.includes("mỹ") || cats.includes("chau-my") || cats.includes("hoa-ky") || tour.id.startsWith("tour-us-");
+
+      default:
+        return c.includes(target);
+    }
+  };
+
   // Main filter pipeline
   const filteredTours = useMemo(() => {
     return baseTours.filter(tour => {
-      // 1. Country Filter (Flexible string matching across country, title, itinerary, highlights)
+      // 1. Strict Country Filter
       if (selectedCountry !== "Tất cả quốc gia") {
-        const sc = selectedCountry.toLowerCase();
-        const tourCountry = tour.country.toLowerCase();
-        const tourTitle = tour.title.toLowerCase();
-        const tourItinerary = tour.itinerary.toLowerCase();
-        const tourRegion = (tour.region || "").toLowerCase();
-
-        let matches = tourCountry.includes(sc) || tourTitle.includes(sc) || tourItinerary.includes(sc);
-
-        // Special handling for clean country names & aliases
-        if (!matches) {
-          if (sc === "việt nam") {
-            matches = tourCountry.includes("việt nam") || tour.category === "trong-nuoc" || tourRegion.includes("việt nam") || tourRegion.includes("bắc") || tourRegion.includes("trung") || tourRegion.includes("nam") || (tour.cats && tour.cats.some(c => c.includes("mien-") || c === "trong-nuoc"));
-          } else if (sc === "trung quốc") {
-            matches = tourCountry.includes("trung quốc") || tourCountry.includes("bắc kinh") || tourCountry.includes("thượng hải") || tourTitle.includes("trung quốc") || tourTitle.includes("thượng hải") || tourTitle.includes("cửu trại câu") || tourTitle.includes("thái sơn") || tourTitle.includes("tô châu");
-          } else if (sc === "hàn quốc") {
-            matches = tourCountry.includes("hàn quốc") || tourTitle.includes("hàn quốc") || tourTitle.includes("seoul") || tourTitle.includes("busan") || tourTitle.includes("nami");
-          } else if (sc === "thái lan") {
-            matches = tourCountry.includes("thái lan") || tourTitle.includes("thái lan") || tourTitle.includes("bangkok") || tourTitle.includes("pattaya") || tourTitle.includes("phuket");
-          } else if (sc === "hoa kỳ") {
-            matches = tourCountry.includes("hoa kỳ") || tourCountry.includes("mỹ") || tourTitle.includes("hoa kỳ") || tourTitle.includes("mỹ") || tourRegion.includes("mỹ");
-          } else if (sc === "châu âu" || sc === "tây âu" || sc === "đông âu" || sc === "nam âu") {
-            matches = tourRegion.includes("châu âu") || tourCountry.includes("âu") || tourCountry.includes("pháp") || tourCountry.includes("đức") || tourCountry.includes("ý") || tourCountry.includes("tây ban nha");
-          } else if (sc === "indonesia") {
-            matches = tourCountry.includes("indonesia") || tourCountry.includes("bali") || tourTitle.includes("bali");
-          } else if (sc === "hong kong") {
-            matches = tourCountry.includes("hong kong") || tourCountry.includes("hongkong") || tourTitle.includes("hong kong");
-          } else if (sc === "dubai - uae") {
-            matches = tourCountry.includes("dubai") || tourCountry.includes("uae") || tourTitle.includes("dubai");
-          }
-        }
-
-        if (!matches) {
+        if (!matchesCountry(tour, selectedCountry)) {
           return false;
         }
       }
@@ -193,10 +242,10 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
         const q = searchText.toLowerCase().trim();
         const matchesTitle = tour.title.toLowerCase().includes(q);
         const matchesItinerary = tour.itinerary.toLowerCase().includes(q);
-        const matchesCountry = tour.country.toLowerCase().includes(q);
+        const matchesTourCountry = tour.country.toLowerCase().includes(q);
         const matchesCode = tour.code.toLowerCase().includes(q);
         const matchesHighlights = tour.highlights.some(hl => hl.toLowerCase().includes(q));
-        if (!matchesTitle && !matchesItinerary && !matchesCountry && !matchesCode && !matchesHighlights) {
+        if (!matchesTitle && !matchesItinerary && !matchesTourCountry && !matchesCode && !matchesHighlights) {
           return false;
         }
       }
@@ -579,51 +628,56 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
                 </div>
               )}
 
-              {/* Empty state */}
+              {/* Empty state: Rendered when no tours match or when country has no tour data yet */}
               {sortedTours.length === 0 && (
                 <div
-                  className="text-center py-24 px-6 rounded-3xl"
+                  className="text-center py-20 px-6 rounded-3xl"
                   style={{
-                    background: "rgba(255, 255, 255, 0.7)",
+                    background: "rgba(255, 255, 255, 0.75)",
                     backdropFilter: "blur(20px)",
-                    border: "1px solid rgba(255, 255, 255, 0.8)",
-                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.03)"
+                    WebkitBackdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255, 255, 255, 0.85)",
+                    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)"
                   }}
                 >
-                  <Globe className="w-14 h-14 mx-auto mb-4 text-[#1e64ae]/30" />
-                  <h3 className="text-lg font-black text-[#003B5C] mb-2">
+                  <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-blue-50/80 border border-blue-100 flex items-center justify-center">
+                    <Globe className="w-10 h-10 text-[#1e64ae]" />
+                  </div>
+                  <h3 className="text-xl font-black text-[#003B5C] mb-2">
                     {t(lang, "Không tìm thấy tour phù hợp", "No matching tours found")}
                   </h3>
-                  <p className="text-gray-500 text-sm max-w-md mx-auto mb-6">
+                  <p className="text-gray-500 text-sm max-w-md mx-auto mb-6 leading-relaxed">
                     {t(
                       lang,
-                      "Hãy thử thay đổi từ khoá tìm kiếm hoặc mở rộng khoảng giá và thời gian của bạn.",
-                      "Try adjusting your filters, searching with different keywords, or clearing your selections."
+                      "Hiện tại chưa có dữ liệu tour cho quốc gia hoặc tiêu chí bạn đã chọn. Vui lòng bấm xóa bộ lọc để xem toàn bộ danh sách tour.",
+                      "There are currently no tour packages for this destination or selected criteria. Please clear filters to see all tours."
                     )}
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white text-xs font-black uppercase tracking-wider shadow-md hover:brightness-110 transition-all"
+                    className="px-7 py-3 rounded-full bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95 transition-all cursor-pointer"
                   >
-                    {t(lang, "Xóa tất cả bộ lọc", "Reset Filters")}
+                    {t(lang, "XÓA TẤT CẢ BỘ LỌC", "RESET ALL FILTERS")}
                   </button>
                 </div>
               )}
 
-              {/* Liquid Glass Tours Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {paginatedTours.map((tour, index) => (
-                  <LiquidTourCard
-                    key={tour.id}
-                    tour={tour}
-                    index={index}
-                    onSelect={(t) => setSelectedTour(t)}
-                    onBook={(t) => {
-                      setSelectedTour(t);
-                    }}
-                  />
-                ))}
-              </div>
+              {/* Liquid Glass Tours Grid - Only rendered when there are tours */}
+              {sortedTours.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {paginatedTours.map((tour, index) => (
+                    <LiquidTourCard
+                      key={tour.id}
+                      tour={tour}
+                      index={index}
+                      onSelect={(t) => setSelectedTour(t)}
+                      onBook={(t) => {
+                        setSelectedTour(t);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
 
               {/* ── Action Pagination (1, 2 ... 16) ── */}
               {totalPages > 1 && (

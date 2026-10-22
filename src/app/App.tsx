@@ -156,10 +156,10 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="hidden xl:flex w-full max-w-[1400px] mx-auto h-[60px] 2xl:h-[66px] rounded-full bg-white/20 backdrop-blur-xl border border-white/30 shadow-[0_15px_35px_-5px_rgba(0,0,0,0.1)] items-center justify-between px-2 2xl:px-4 py-2 gap-2 relative z-20"
+          className="hidden xl:flex w-full max-w-[1440px] mx-auto h-[62px] 2xl:h-[68px] rounded-full bg-white/20 backdrop-blur-xl border border-white/35 shadow-[0_15px_35px_-5px_rgba(0,0,0,0.12)] items-center justify-between px-4 2xl:px-6 py-2 gap-4 relative z-20"
         >
           {/* Main Menu */}
-          <nav className="flex items-center justify-center gap-0.5 2xl:gap-1 flex-1 w-full overflow-visible">
+          <nav className="flex items-center justify-start gap-1 2xl:gap-3 flex-1 overflow-visible">
             {NAV.map((item, index) => {
               // Position submenus perfectly: middle items centered, right items align-right
               const popoverPos = index > NAV.length - 3 ? "right-0" : index < 2 ? "left-0" : "left-1/2 -translate-x-1/2";
@@ -172,7 +172,7 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
               >
                 <button
                   onClick={() => nav(item.page)}
-                  className={`relative px-2 xl:px-3 2xl:px-4 py-2 text-[12px] 2xl:text-[13px] font-black rounded-full transition-all duration-300 whitespace-nowrap flex items-center gap-1 shrink-0 ${
+                  className={`relative px-3.5 xl:px-4 2xl:px-5 py-2.5 text-[13px] 2xl:text-[14px] font-black rounded-full transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
                     current === item.page
                       ? "text-white shadow-md"
                       : "text-white hover:text-white hover:bg-white/30"
@@ -235,21 +235,11 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
           </nav>
 
           {/* Right Utilities */}
-          <div className="flex items-center justify-end gap-1.5 2xl:gap-3 shrink-0">
-            {/* Search - Always visible text on XL+ */}
-            <div className="flex items-center bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 rounded-full w-32 xl:w-40 2xl:w-48 h-[40px] 2xl:h-[44px] transition-all hover:shadow-md focus-within:w-48 focus-within:bg-white focus-within:shadow-md group/search shrink-0 px-3 overflow-hidden">
-              <Search className="w-4 h-4 text-white group-hover/search:text-[#003B5C] focus-within:text-[#003B5C] transition-colors shrink-0" />
-              <input 
-                type="text" 
-                placeholder={t(lang, "Tìm kiếm...", "Search...")} 
-                className="bg-transparent border-none text-[12px] font-bold text-white group-hover/search:text-[#003B5C] focus-within:text-[#003B5C] focus:ring-0 w-full placeholder:text-white/70 focus-within:placeholder:text-[#003B5C]/50 ml-2 outline-none block" 
-              />
-            </div>
-
+          <div className="flex items-center justify-end gap-3 2xl:gap-4 shrink-0">
             {/* Lang */}
-            <div className="flex items-center bg-white/20 hover:bg-white/30 transition-all border border-white/40 rounded-full p-1 h-[40px] 2xl:h-[44px] shrink-0">
-              <button onClick={() => setLang("vi")} className={`px-3 2xl:px-4 h-full text-[11px] 2xl:text-[12px] font-black rounded-full transition-colors ${lang === "vi" ? "bg-white text-[#1e64ae] shadow-sm" : "text-white/80 hover:text-white"}`}>VN</button>
-              <button onClick={() => setLang("en")} className={`px-3 2xl:px-4 h-full text-[11px] 2xl:text-[12px] font-black rounded-full transition-colors ${lang === "en" ? "bg-white text-[#1e64ae] shadow-sm" : "text-white/80 hover:text-white"}`}>EN</button>
+            <div className="flex items-center bg-white/20 hover:bg-white/30 transition-all border border-white/40 rounded-full p-1 h-[42px] 2xl:h-[46px] shrink-0">
+              <button onClick={() => setLang("vi")} className={`px-3.5 2xl:px-4 h-full text-[12px] 2xl:text-[13px] font-black rounded-full transition-colors ${lang === "vi" ? "bg-white text-[#1e64ae] shadow-sm" : "text-white/80 hover:text-white"}`}>VN</button>
+              <button onClick={() => setLang("en")} className={`px-3.5 2xl:px-4 h-full text-[12px] 2xl:text-[13px] font-black rounded-full transition-colors ${lang === "en" ? "bg-white text-[#1e64ae] shadow-sm" : "text-white/80 hover:text-white"}`}>EN</button>
             </div>
 
             {/* CTA */}
@@ -257,7 +247,7 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => nav("tour")}
-              className="bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white text-[11px] xl:text-[12px] 2xl:text-[13px] font-black px-4 xl:px-5 2xl:px-6 h-[40px] 2xl:h-[44px] rounded-full transition-all shadow-lg whitespace-nowrap uppercase tracking-tight shrink-0 flex items-center justify-center"
+              className="bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white text-[12px] xl:text-[13px] 2xl:text-[14px] font-black px-6 2xl:px-8 h-[42px] 2xl:h-[46px] rounded-full transition-all shadow-lg whitespace-nowrap uppercase tracking-tight shrink-0 flex items-center justify-center cursor-pointer"
             >
               {t(lang, "ĐẶT TOUR", "BOOK TOUR")}
             </Motion.button>
@@ -849,42 +839,6 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
         </div>
       </section>
 
-      {/* ── Call To Action Banner ── */}
-      <section className="max-w-7xl mx-auto px-4 py-24">
-        <Motion.div 
-          initial={{ opacity: 0, scale: 0.9, rotateX: 10 }}
-          whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
-          className="relative rounded-[3rem] overflow-hidden shadow-2xl"
-        >
-          <img src="https://images.unsplash.com/photo-1609412058473-c199497c3c5d?w=1600&q=80" alt="Banner" className="absolute inset-0 w-full h-full object-cover scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#003B5C]/90 via-[#1e64ae]/80 to-transparent" />
-          
-          <div className="relative z-10 p-12 md:p-20 max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-6">
-              Bạn Đã Sẵn Sàng Cho Chuyến Đi Tiếp Theo?
-            </h2>
-            <p className="text-white/80 text-lg mb-10 font-medium leading-relaxed">
-              Đăng ký ngay để nhận thông báo về các chương trình khuyến mãi độc quyền và các tour du lịch mới nhất từ Én Việt.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input 
-                type="email" 
-                placeholder="Nhập email của bạn..." 
-                className="flex-1 bg-white/20 backdrop-blur-md border border-white/30 text-white placeholder:text-white/50 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-[#00E676] font-medium"
-              />
-              <Motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#00E676] hover:bg-[#00c563] text-[#003B5C] font-black px-8 py-4 rounded-2xl transition-colors whitespace-nowrap uppercase tracking-wide shadow-lg"
-              >
-                Đăng Ký Ngay
-              </Motion.button>
-            </div>
-          </div>
-        </Motion.div>
-      </section>
     </main>
   );
 }
