@@ -4,6 +4,28 @@ import { Clock, Plane, ArrowRight, Star, CheckCircle } from "lucide-react";
 import { TourItem } from "../../data/toursData";
 import { useLang, t } from "../App";
 
+// Danh sách ảnh phong cảnh du lịch thực tế độ phân giải cao thay thế hoàn toàn placeholder 600x400
+export const SCENIC_TRAVEL_FALLBACKS = [
+  "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85", // Đài Bắc / Tháp 101 lung linh
+  "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=1000&q=85", // Núi Phú Sỹ & Chùa Chureito
+  "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1000&q=85", // Hoa anh đào Nhật Bản nở rộ
+  "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1000&q=85", // Cố đô Kyoto mùa thu lá đỏ Momiji
+  "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&q=85", // Đền Fushimi Inari Kyoto
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1000&q=85", // Biển đảo nhiệt đới Bali / Phuket
+  "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1000&q=85", // Tháp Eiffel Paris tráng lệ
+  "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1000&q=85", // Làng ven biển Cinque Terre Ý
+  "https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=1000&q=85", // Đảo Nami Hàn Quốc mùa thu
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&q=85", // Bờ Tây Hoa Kỳ hẻm núi Grand Canyon
+];
+
+export function getSafeTourImage(tour: TourItem, idx = 0): string {
+  if (tour.image && !tour.image.includes("placehold") && !tour.image.includes("600x400") && !tour.image.includes("via.placeholder")) {
+    return tour.image;
+  }
+  const hash = (tour.id || tour.code || tour.title || "").split("").reduce((acc, c) => acc + c.charCodeAt(0), idx);
+  return SCENIC_TRAVEL_FALLBACKS[hash % SCENIC_TRAVEL_FALLBACKS.length];
+}
+
 interface LiquidTourCardProps {
   tour: TourItem;
   onSelect: (tour: TourItem) => void;
@@ -16,6 +38,7 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
   function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }, ref) {
   const { lang } = useLang();
   const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
+  const tourImg = getSafeTourImage(tour, index);
 
   // Flag or country emoji
   const getCountryDisplay = (country: string) => {
@@ -114,10 +137,13 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
       {/* ── Media slot with Top & Bottom Overlays ── */}
       <div className="relative h-60 md:h-64 w-full overflow-hidden shrink-0 rounded-t-[2.2rem]">
         <img
-          src={tour.image || "https://placehold.co/600x400"}
+          src={tourImg}
           alt={tour.title}
           onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src = "https://placehold.co/600x400";
+            const target = e.currentTarget as HTMLImageElement;
+            target.onerror = null;
+            const fallback = SCENIC_TRAVEL_FALLBACKS[index % SCENIC_TRAVEL_FALLBACKS.length];
+            target.src = fallback;
           }}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
           loading="lazy"

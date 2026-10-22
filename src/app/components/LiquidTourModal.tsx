@@ -341,11 +341,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <a
-                  href="tel:0964110000"
+                  href="tel:0983056056"
                   className="flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl border-2 border-[#1e64ae] text-[#1e64ae] hover:bg-[#1e64ae] hover:text-white font-black text-sm transition-all"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>0964.110.000</span>
+                  <span>0983.056.056</span>
                 </a>
                 <button
                   onClick={() => {
@@ -467,8 +467,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-200">
                       <div className="md:col-span-2 relative h-64 sm:h-80 rounded-xl overflow-hidden shadow-md">
                         <img
-                          src={tour.image}
+                          src={tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85"}
                           alt={tour.title}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
+                          }}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -552,7 +555,14 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                           ))
                         ) : (
                           <div className="col-span-4 relative h-56 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-                            <img src={tour.image} alt={tour.title} className="w-full h-full object-cover" />
+                            <img
+                              src={tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85"}
+                              alt={tour.title}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
+                              }}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                         )}
                       </div>
@@ -631,6 +641,9 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                                   <img
                                     src={d.image}
                                     alt={d.title}
+                                    onError={(e) => {
+                                      (e.currentTarget as HTMLImageElement).src = tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=800&q=80";
+                                    }}
                                     className="w-full h-full object-cover"
                                   />
                                   <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded bg-black/60 text-white text-[11px] font-semibold backdrop-blur-sm">
@@ -788,11 +801,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
 
                       <div className="flex items-center gap-3">
                         <a
-                          href="tel:0964110000"
+                          href="tel:0983056056"
                           className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center gap-2"
                         >
                           <Phone className="w-4 h-4" />
-                          <span>Hotline: 0964.110.000</span>
+                          <span>Hotline: 0983.056.056</span>
                         </a>
                       </div>
                     </div>

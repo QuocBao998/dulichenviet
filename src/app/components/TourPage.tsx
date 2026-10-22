@@ -23,6 +23,9 @@ type SortOpt = "newest" | "price-asc" | "price-desc" | "duration-asc" | "name-az
 const PAGE_TITLE: Record<string, { vi: string; en: string }> = {
   "tour":                      { vi: "Khám Phá Tất Cả Tour Du Lịch",  en: "All Travel Tours" },
   "tour-trong-nuoc":           { vi: "Tour Du Lịch Trong Nước",       en: "Domestic Tours" },
+  "tour-mien-bac":             { vi: "Tour Du Lịch Miền Bắc",         en: "Northern Vietnam Tours" },
+  "tour-mien-trung":           { vi: "Tour Du Lịch Miền Trung",       en: "Central Vietnam Tours" },
+  "tour-mien-nam":             { vi: "Tour Du Lịch Miền Nam",         en: "Southern Vietnam Tours" },
   "tour-nuoc-ngoai":           { vi: "Tour Du Lịch Nước Ngoài",       en: "International Tours" },
   "tour-trung-quoc":           { vi: "Tour Du Lịch Trung Quốc",       en: "China Tours" },
   "tour-han-quoc":             { vi: "Tour Du Lịch Hàn Quốc",         en: "Korea Tours" },
@@ -59,7 +62,6 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const pageTitle = PAGE_TITLE[category] ?? PAGE_TITLE["tour"];
-  const isGioChot = category === "tour-gio-chot";
 
   // Extract unique airlines from dataset
   const availableAirlines = useMemo(() => {
@@ -74,8 +76,18 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
 
   // Base list depending on active page category
   const baseTours = useMemo(() => {
-    if (category === "tour-trong-nuoc") {
-      return ALL_TOURS.filter(t => t.category === "trong-nuoc");
+    // Categories without provided files yet -> return [] to display the empty state matching user request
+    if (
+      category === "tour-trong-nuoc" ||
+      category === "tour-mien-bac" ||
+      category === "tour-mien-trung" ||
+      category === "tour-mien-nam" ||
+      category === "tour-gio-chot" ||
+      category === "tour-hanh-huong" ||
+      category === "tour-hanh-huong-cong-giao" ||
+      category === "tour-hanh-huong-phat-giao"
+    ) {
+      return [];
     }
     if (category === "tour-nuoc-ngoai") {
       return TOUR_DATASET.Tour_Ngoai_Nuoc;
@@ -98,15 +110,49 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
     if (category === "tour-chau-my") {
       return TOUR_DATASET.Tour_Chau_My;
     }
+    if (category === "tour") {
+      return ALL_TOURS;
+    }
     return ALL_TOURS;
   }, [category]);
 
   // Main filter pipeline
   const filteredTours = useMemo(() => {
     return baseTours.filter(tour => {
-      // 1. Country Filter
+      // 1. Country Filter (Flexible string matching across country, title, itinerary, highlights)
       if (selectedCountry !== "Tất cả quốc gia") {
-        if (!tour.country.toLowerCase().includes(selectedCountry.toLowerCase())) {
+        const sc = selectedCountry.toLowerCase();
+        const tourCountry = tour.country.toLowerCase();
+        const tourTitle = tour.title.toLowerCase();
+        const tourItinerary = tour.itinerary.toLowerCase();
+        const tourRegion = (tour.region || "").toLowerCase();
+
+        let matches = tourCountry.includes(sc) || tourTitle.includes(sc) || tourItinerary.includes(sc);
+
+        // Special handling for clean country names & aliases
+        if (!matches) {
+          if (sc === "việt nam") {
+            matches = tourCountry.includes("việt nam") || tour.category === "trong-nuoc" || tourRegion.includes("việt nam") || tourRegion.includes("bắc") || tourRegion.includes("trung") || tourRegion.includes("nam") || (tour.cats && tour.cats.some(c => c.includes("mien-") || c === "trong-nuoc"));
+          } else if (sc === "trung quốc") {
+            matches = tourCountry.includes("trung quốc") || tourCountry.includes("bắc kinh") || tourCountry.includes("thượng hải") || tourTitle.includes("trung quốc") || tourTitle.includes("thượng hải") || tourTitle.includes("cửu trại câu") || tourTitle.includes("thái sơn") || tourTitle.includes("tô châu");
+          } else if (sc === "hàn quốc") {
+            matches = tourCountry.includes("hàn quốc") || tourTitle.includes("hàn quốc") || tourTitle.includes("seoul") || tourTitle.includes("busan") || tourTitle.includes("nami");
+          } else if (sc === "thái lan") {
+            matches = tourCountry.includes("thái lan") || tourTitle.includes("thái lan") || tourTitle.includes("bangkok") || tourTitle.includes("pattaya") || tourTitle.includes("phuket");
+          } else if (sc === "hoa kỳ") {
+            matches = tourCountry.includes("hoa kỳ") || tourCountry.includes("mỹ") || tourTitle.includes("hoa kỳ") || tourTitle.includes("mỹ") || tourRegion.includes("mỹ");
+          } else if (sc === "châu âu" || sc === "tây âu" || sc === "đông âu" || sc === "nam âu") {
+            matches = tourRegion.includes("châu âu") || tourCountry.includes("âu") || tourCountry.includes("pháp") || tourCountry.includes("đức") || tourCountry.includes("ý") || tourCountry.includes("tây ban nha");
+          } else if (sc === "indonesia") {
+            matches = tourCountry.includes("indonesia") || tourCountry.includes("bali") || tourTitle.includes("bali");
+          } else if (sc === "hong kong") {
+            matches = tourCountry.includes("hong kong") || tourCountry.includes("hongkong") || tourTitle.includes("hong kong");
+          } else if (sc === "dubai - uae") {
+            matches = tourCountry.includes("dubai") || tourCountry.includes("uae") || tourTitle.includes("dubai");
+          }
+        }
+
+        if (!matches) {
           return false;
         }
       }
@@ -235,48 +281,7 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
       </div>
 
       <div className="max-w-7xl mx-auto px-4 mt-8">
-        {/* Special case: Tour Giờ Chót */}
-        {isGioChot ? (
-          <div
-            className="text-center py-20 px-6 rounded-3xl max-w-3xl mx-auto my-8 relative overflow-hidden"
-            style={{
-              background: "rgba(255, 255, 255, 0.75)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
-              border: "1px solid rgba(255, 255, 255, 0.8)",
-              boxShadow: "0 20px 50px -10px rgba(0, 59, 92, 0.1)"
-            }}
-          >
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/30">
-              <Clock className="w-10 h-10 animate-pulse" />
-            </div>
-            <h2 className="text-2xl md:text-3xl font-black text-[#003B5C] mb-3">
-              {t(lang, "Tour Giờ Chót – Giảm Giá Đến 40%", "Last Minute Deals – Up to 40% Off")}
-            </h2>
-            <p className="text-gray-600 max-w-lg mx-auto mb-8 text-sm md:text-base leading-relaxed">
-              {t(
-                lang,
-                "Danh sách vé giờ chót và khuyến mãi đặc biệt được cập nhật hàng ngày tại văn phòng Én Việt. Vui lòng để lại thông tin để nhận bảng giá nóng nhất!",
-                "Exclusive last-minute departures and discounted seats are updated daily. Contact our team to receive instant hot deals!"
-              )}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={openForm}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white font-black text-sm uppercase tracking-wide hover:brightness-110 shadow-lg shadow-blue-900/20 transition-all"
-              >
-                {t(lang, "Đăng Ký Nhận Vé Giờ Chót", "Get Last Minute Alerts")}
-              </button>
-              <a
-                href="tel:0964110000"
-                className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl border-2 border-[#1e64ae] text-[#1e64ae] hover:bg-[#1e64ae] hover:text-white font-black text-sm transition-all"
-              >
-                <Phone className="w-4 h-4" /> 0964.110.000
-              </a>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col lg:flex-row gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
             {/* ── Mobile Filter Trigger Button ── */}
             <div className="lg:hidden w-full flex items-center justify-between gap-3">
               <button
@@ -724,7 +729,6 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
               )}
             </div>
           </div>
-        )}
       </div>
 
       {/* ── Liquid Glass Detail Modal ── */}

@@ -498,15 +498,15 @@ export const TOUR_CHAU_A_DATASET: TourItem[] = [
     category: "nuoc-ngoai",
     cats: ["all", "nuoc-ngoai", "nhat-ban", "chau-a"],
     badge: "Mùa Thu Lá Đỏ",
-    image: "https://images.unsplash.com/photo-1528164344705-475426879c0d?w=1000&q=85",
+    image: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1080&q=85",
     departure: "Mùa Thu (Tháng 9, 10, 11)",
     isFeatured: true,
     pdfFile: "MÙA THU CUNG ĐƯOỜNG VÀNG NHẬT BẢN  6N5D EVG-THT.pdf",
     galleryImages: [
-      "https://images.unsplash.com/photo-1528164344705-475426879c0d?w=1000&q=85",
-      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80",
-      "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&q=80",
-      "https://images.unsplash.com/photo-1578637387939-43c525550085?w=800&q=80"
+      "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1080&q=85",
+      "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=1000&q=85",
+      "https://images.unsplash.com/photo-1578637387939-43c525550085?w=800&q=80",
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80"
     ],
     flightInfo: {
       airline: "Vietjet Air (Chuyến bay thẳng)",
@@ -556,7 +556,7 @@ export const TOUR_CHAU_A_DATASET: TourItem[] = [
         title: "LÀNG CỔ SHIRAKAWA-GO – PHỐ CỔ TAKAYAMA",
         meals: "Ăn sáng, trưa thịt bò Hida, tối",
         hotel: "Khách sạn 3-4 sao Gifu / Kyoto",
-        image: "https://images.unsplash.com/photo-1528164344705-475426879c0d?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&q=80",
         activities: [
           { desc: "Khám phá Làng cổ tích Shirakawa-go với những mái nhà hình bàn tay chắp Gassho-zukuri giữa sắc phong đỏ rực.", highlight: true },
           { desc: "Dạo bước Phố cổ Takayama Sanmachi Suji bảo tồn nguyên vẹn kiến trúc thời Edo, thưởng thức món thịt bò Hida nướng thơm lừng.", highlight: true }
@@ -1199,15 +1199,15 @@ export const TOUR_CHAU_AU_DATASET: TourItem[] = [
     category: "nuoc-ngoai",
     cats: ["all", "nuoc-ngoai", "chau-au", "tay-ban-nha", "bo-dao-nha", "maroc"],
     badge: "Liên Lục Địa Âu - Phi",
-    image: "https://images.unsplash.com/photo-1583422409516-2895a77dfded?w=1000&q=85",
+    image: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1000&q=85",
     departure: "20/10 – 01/11",
     isFeatured: true,
     pdfFile: "HANH TRINH KHAM PHA NAM AU MAROC - TAY BAN NHA - BO DAO NHA 13N12D.pdf",
     galleryImages: [
-      "https://images.unsplash.com/photo-1583422409516-2895a77dfded?w=1000&q=85",
-      "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80",
+      "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1000&q=85",
+      "https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=800&q=80",
       "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80",
-      "https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=800&q=80"
+      "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&q=80"
     ],
     flightInfo: {
       airline: "Emirates Airlines 5★",
@@ -1341,7 +1341,7 @@ export const TOUR_CHAU_AU_DATASET: TourItem[] = [
         title: "ZARAGOZA – BARCELONA – MUA SẮM EL CORTE INGLÉS – SHOW FLAMENCO",
         meals: "Ăn sáng, trưa, tối kèm Show Flamenco",
         hotel: "Khách sạn 4 sao Barcelona",
-        image: "https://images.unsplash.com/photo-1583422409516-2895a77dfded?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80",
         activities: [
           { desc: "Viếng Vương Cung Thánh Đường Đức Mẹ Pilar đầu tiên trong lịch sử Công giáo.", highlight: true },
           { desc: "Đến Barcelona – thành phố quyến rũ nhất Địa Trung Hải. Tự do mua sắm hàng hiệu tại trung tâm El Corte Inglés.", highlight: true },
@@ -1434,7 +1434,7 @@ export const TOUR_CHAU_AU_DATASET: TourItem[] = [
       "https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=1000&q=85",
       "https://images.unsplash.com/photo-1541849546-216549ae216d?w=800&q=80",
       "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?w=800&q=80",
-      "https://images.unsplash.com/photo-1516550893885-985c70753f47?w=800&q=80"
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80"
     ],
     flightInfo: {
       airline: "Vietnam Airlines 4★ (Chuyến bay thẳng trực tiếp)",
@@ -1515,7 +1515,7 @@ export const TOUR_CHAU_AU_DATASET: TourItem[] = [
         title: "DU THUYỀN SÔNG DANUBE – CỐ ĐÔ VIENNA (ÁO)",
         meals: "Ăn sáng, trưa, tối",
         hotel: "Khách sạn 4 sao Vienna",
-        image: "https://images.unsplash.com/photo-1516550893885-985c70753f47?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1541849546-216549ae216d?w=800&q=80",
         activities: [
           { desc: "Trải nghiệm Du thuyền ngắm cảnh sông Danube – ngắm nhìn toàn cảnh thành phố Budapest hai bên bờ sông lung linh thanh bình.", highlight: true },
           { desc: "Khởi hành đến Vienna – cái nôi của âm nhạc cổ điển Châu Âu quê hương của Mozart, Beethoven, Haydn.", highlight: true },
@@ -1541,7 +1541,7 @@ export const TOUR_CHAU_AU_DATASET: TourItem[] = [
         title: "SALZBURG – MUNICH (ĐỨC) – QUẢNG TRƯỜNG MARIENPLATZ",
         meals: "Ăn sáng, trưa, tối",
         hotel: "Khách sạn 4 sao Munich",
-        image: "https://images.unsplash.com/photo-1516550893885-985c70753f47?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80",
         activities: [
           { desc: "Khởi hành về lại thành phố Munich (Đức). Chụp ảnh lưu niệm bên ngoài trụ sở CLB bóng đá Bayern Munich danh giá.", highlight: true },
           { desc: "Quảng trường trung tâm Marienplatz náo nhiệt, thưởng thức màn trình diễn chuông chùm Glockenspiel ngân nga và các vũ công máy.", highlight: true },
@@ -1833,7 +1833,7 @@ export const TOUR_CHAU_MY_DATASET: TourItem[] = [
     pdfFile: "TRAI NGHIEM NET DEP HAI BO NUOC MY 11N10D.pdf",
     galleryImages: [
       "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1000&q=85", // Tượng Nữ Thần Tự Do
-      "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",  // Điện Capitol Washington D.C
+      "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=800&q=80",  // Điện Capitol Washington D.C
       "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=800&q=80", // Grand Canyon
       "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80"  // Cầu Cổng Vàng Golden Gate
     ],
@@ -1878,7 +1878,7 @@ export const TOUR_CHAU_MY_DATASET: TourItem[] = [
         title: "NEW YORK – PHILADELPHIA – THỦ ĐÔ WASHINGTON D.C",
         meals: "Ăn sáng, trưa, tối",
         hotel: "Hilton Gaithersburgs hoặc tương đương",
-        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=800&q=80",
         activities: [
           { desc: "Khởi hành đi cố đô Philadelphia. Tham quan Quả Chuông Tự Do (Liberty Bell) giống lên tiếng chuông độc lập của nước Mỹ.", highlight: true },
           { desc: "Chụp ảnh Dinh Độc Lập (Independence Hall) nơi ký bản Tuyên ngôn Độc lập Hoa Kỳ.", highlight: true },
@@ -1890,7 +1890,7 @@ export const TOUR_CHAU_MY_DATASET: TourItem[] = [
         title: "WASHINGTON D.C – NHÀ TRẮNG – BẢO TÀNG LỊCH SỬ TỰ NHIÊN ✈ LAS VEGAS",
         meals: "Ăn sáng, trưa, tối",
         hotel: "Excalibur Hotel Las Vegas hoặc tương đương",
-        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=800&q=80",
         activities: [
           { desc: "Chụp ảnh bên ngoài Nhà Trắng (White House) – nơi làm việc của Tổng thống Hoa Kỳ.", highlight: true },
           { desc: "Viếng Nhà tưởng niệm Lincoln và Nhà tưởng niệm Jefferson.", highlight: true },
@@ -2031,12 +2031,12 @@ export const TOUR_CHAU_MY_DATASET: TourItem[] = [
     cats: ["all", "nuoc-ngoai", "chau-my", "hoa-ky", "my"],
     badge: "Bờ Đông Nước Mỹ 4 Sao",
     // Ảnh đại diện phù hợp: Điện Capitol Washington D.C uy nghiêm tráng lệ
-    image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1000&q=85",
+    image: "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=1000&q=85",
     departure: "12/11/2026",
     isFeatured: true,
     pdfFile: "TRAI NGHIEM VE DEP BO DONG NUOC MY 7N6D.pdf",
     galleryImages: [
-      "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1000&q=85", // Điện Capitol Washington
+      "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=1000&q=85", // Điện Capitol Washington
       "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=800&q=80", // Nữ Thần Tự Do
       "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80", // Times Square New York
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80"  // Washington Monument
@@ -2089,7 +2089,7 @@ export const TOUR_CHAU_MY_DATASET: TourItem[] = [
         title: "NEW YORK – PHILADELPHIA – MUA SẮM DELAWARE – WASHINGTON D.C",
         meals: "Ăn sáng, trưa, tối",
         hotel: "Sheraton Alexandria Old Town hoặc tương đương",
-        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
+        image: "https://images.unsplash.com/photo-1557160854-e1e89fdd3286?w=800&q=80",
         activities: [
           { desc: "Khởi hành đi Philadelphia. Chiêm ngưỡng Chuông Tự Do (Liberty Bell) và Dinh Độc Lập (Independence Hall).", highlight: true },
           { desc: "Dừng chân thỏa sức mua sắm tại Christiana Mall bang Delaware – 1 trong 5 bang miễn thuế tuyệt đối của Mỹ.", highlight: true },
@@ -5028,7 +5028,7 @@ export const TOUR_DATASET = {
   Tour_Ngoai_Nuoc: [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, ...TOUR_DONG_NAM_A_DATASET, ...TOUR_CHAU_AU_DATASET, ...TOUR_CHAU_MY_DATASET],
   Tour_Trung_Quoc: [...TOUR_TRUNG_QUOC_DATASET, TOUR_DONG_NAM_A_DATASET.find(t => t.id === 'tour-cn-pek-sha')!].filter(Boolean),
   Tour_Han_Quoc: TOUR_HAN_QUOC_DATASET,
-  Tour_Chau_A: [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, TOUR_DONG_NAM_A_DATASET.find(t => t.id === 'tour-cn-pek-sha')!].filter(Boolean),
+  Tour_Chau_A: [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, ...TOUR_DONG_NAM_A_DATASET].filter(Boolean),
   Tour_Dong_Nam_A: TOUR_DONG_NAM_A_DATASET,
   Tour_Chau_Au: TOUR_CHAU_AU_DATASET,
   Tour_Chau_My: TOUR_CHAU_MY_DATASET
@@ -5037,34 +5037,30 @@ export const TOUR_DATASET = {
 // ALL_TOURS contains strictly the official verified tours from user-provided PDF files
 export const ALL_TOURS: TourItem[] = [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, ...TOUR_DONG_NAM_A_DATASET, ...TOUR_CHAU_AU_DATASET, ...TOUR_CHAU_MY_DATASET];
 
-// Filter definitions for subpages
+// Filter definitions for subpages - Tên quốc gia gọn gàng, không kèm vế phụ trong ngoặc đơn
 export const COUNTRIES = [
   "Tất cả quốc gia",
-  "Trung Quốc (Thượng Hải - Nam Kinh - Ô Trấn - Hàng Châu)",
-  "Trung Quốc (Thành Đô - Cửu Trại Câu - Lạc Sơn Đại Phật)",
-  "Trung Quốc (Tế Nam - Khúc Phụ - Thái Sơn - Thanh Đảo)",
-  "Trung Quốc (Thượng Hải - Vô Tích - Tô Châu - Hàng Châu)",
-  "Hong Kong (Cathay Pacific 5★ - Disneyland)",
-  "Hàn Quốc (Seoul - Đảo Nami - Everland)",
-  "Hàn Quốc (Busan - Daegu - Seoul)",
-  "Thái Lan (Bangkok - Pattaya)",
-  "Thái Lan (Đảo Phuket - Phi Phi)",
-  "Campuchia (Siem Reap - Phnom Penh)",
-  "Philippines (Đảo Cebu - Oslob - Moalboal)",
-  "Indonesia (Thiên đường Đảo Bali)",
-  "Lào (Viêng Chăn - Luang Prabang - Văng Viêng)",
-  "Malaysia - Singapore",
-  "Singapore",
-  "Trung Quốc (Bắc Kinh - Thượng Hải - Hàng Châu)",
-  "Đài Loan",
+  "Việt Nam",
+  "Trung Quốc",
+  "Hàn Quốc",
   "Nhật Bản",
+  "Đài Loan",
+  "Hong Kong",
+  "Thái Lan",
+  "Singapore",
+  "Malaysia",
+  "Indonesia",
+  "Philippines",
+  "Campuchia",
+  "Lào",
   "Dubai - UAE",
   "Bhutan",
   "Thổ Nhĩ Kỳ",
-  "Tây Âu (Pháp - Thụy Sĩ - Ý - Vatican)",
-  "Đông Âu (Đức - Áo - Séc - Hungary)",
-  "Nam Âu (Tây Ban Nha - Bồ Đào Nha - Maroc)",
-  "Hoa Kỳ (Mỹ)"
+  "Châu Âu",
+  "Tây Âu",
+  "Đông Âu",
+  "Nam Âu",
+  "Hoa Kỳ"
 ];
 
 export const PRICE_RANGES = [

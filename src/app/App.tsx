@@ -33,7 +33,7 @@ import { ALL_TOURS, TOUR_DATASET, TourItem } from "../data/toursData";
 import { LiquidTourCard } from "./components/LiquidTourCard";
 import { LiquidTourModal } from "./components/LiquidTourModal";
 
-export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-nuoc-ngoai" | "tour-trung-quoc" | "tour-han-quoc" | "tour-dong-nam-a" | "tour-chau-a" | "tour-chau-au" | "tour-chau-my" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
+export type Page = "home" | "gioi-thieu" | "tour" | "tour-trong-nuoc" | "tour-mien-bac" | "tour-mien-trung" | "tour-mien-nam" | "tour-nuoc-ngoai" | "tour-trung-quoc" | "tour-han-quoc" | "tour-dong-nam-a" | "tour-chau-a" | "tour-chau-au" | "tour-chau-my" | "tour-gio-chot" | "tour-hanh-huong" | "tour-hanh-huong-cong-giao" | "tour-hanh-huong-phat-giao" | "golf" | "ve-may-bay" | "visa" | "thong-tin" | "lien-he" | "thu-vien-anh";
 
 const NAV: { label: string; enLabel: string; page: Page }[] = [
   { label: "Trang Chủ", enLabel: "Home", page: "home" },
@@ -80,18 +80,25 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
 
   const subMenus: Record<string, { label: string; enLabel: string; page: Page; sub?: { label: string; enLabel: string; page: Page }[] }[]> = {
     "tour": [
-      { label: "Tour Trung Quốc", enLabel: "China Tours", page: "tour-trung-quoc" },
-      { label: "Tour Hàn Quốc", enLabel: "Korea Tours", page: "tour-han-quoc" },
-      { label: "Tour Đông Nam Á", enLabel: "Southeast Asia Tours", page: "tour-dong-nam-a" },
-      { label: "Tour Châu Á", enLabel: "Asia Tours", page: "tour-chau-a" },
-      { label: "Tour Châu Âu", enLabel: "Europe Tours", page: "tour-chau-au" },
-      { label: "Tour Châu Mỹ", enLabel: "Americas Tours", page: "tour-chau-my" },
-      { label: "Tour Nước Ngoài (Tất Cả)", enLabel: "All International Tours", page: "tour-nuoc-ngoai" },
-      { label: "Tour Trong Nước", enLabel: "Domestic Tours", page: "tour-trong-nuoc" },
-      { label: "Tour Giờ Chót", enLabel: "Last Minute Tours", page: "tour-gio-chot" },
       { 
-        label: "Tour Hành Hương", enLabel: "Pilgrimage Tours",
-        page: "tour-hanh-huong",
+        label: "Tour ngoài nước", enLabel: "International Tours", page: "tour-nuoc-ngoai",
+        sub: [
+          { label: "Tour Châu Á", enLabel: "Asia Tours", page: "tour-chau-a" },
+          { label: "Tour Châu Âu", enLabel: "Europe Tours", page: "tour-chau-au" },
+          { label: "Tour Châu Mỹ", enLabel: "Americas Tours", page: "tour-chau-my" }
+        ]
+      },
+      { 
+        label: "Tour trong nước", enLabel: "Domestic Tours", page: "tour-trong-nuoc",
+        sub: [
+          { label: "Tour Miền Bắc", enLabel: "Northern Vietnam Tours", page: "tour-mien-bac" },
+          { label: "Tour Miền Trung", enLabel: "Central Vietnam Tours", page: "tour-mien-trung" },
+          { label: "Tour Miền Nam", enLabel: "Southern Vietnam Tours", page: "tour-mien-nam" }
+        ]
+      },
+      { label: "Tour giờ chót", enLabel: "Last Minute Tours", page: "tour-gio-chot" },
+      { 
+        label: "Tour hành hương", enLabel: "Pilgrimage Tours", page: "tour-hanh-huong",
         sub: [
           { label: "Tour Hành Hương Công Giáo", enLabel: "Catholic Pilgrimage", page: "tour-hanh-huong-cong-giao" },
           { label: "Tour Hành Hương Phật Giáo", enLabel: "Buddhist Pilgrimage", page: "tour-hanh-huong-phat-giao" }
@@ -186,33 +193,33 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
                 {/* Submenu Popover */}
                 {subMenus[item.page] && (
                   <div className={`absolute top-[110%] ${popoverPos} pt-3 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-[100]`}>
-                    <div className="backdrop-blur-3xl border border-white/50 rounded-2xl shadow-2xl py-3 min-w-[240px] bg-white/95 ring-1 ring-black/5 overflow-hidden">
+                    <div className="backdrop-blur-3xl border border-white/60 rounded-2xl shadow-2xl py-2 min-w-[240px] bg-white/95 ring-1 ring-black/5 overflow-visible">
                       {subMenus[item.page].map((sub) => (
                         <div key={t(lang, sub.label, sub.enLabel)} className="group/sub relative">
                           <button
                             onClick={() => { nav(sub.page, (sub as any).tab); setActiveMenu(null); }}
-                            className="w-full text-left px-6 py-2.5 text-[13px] font-bold text-[#003B5C] hover:bg-gradient-to-r hover:from-[#1e64ae] hover:to-[#77c14d] hover:text-white transition-all flex items-center justify-between"
+                            className="w-full text-left px-5 py-2.5 text-[13px] font-bold text-[#003B5C] hover:bg-gradient-to-r hover:from-[#1e64ae] hover:to-[#77c14d] hover:text-white transition-all flex items-center justify-between cursor-pointer rounded-xl mx-auto"
                           >
-                            {t(lang, sub.label, sub.enLabel)}
+                            <span>{t(lang, sub.label, sub.enLabel)}</span>
                             {sub.sub ? (
-                              <ChevronRight className="w-3 h-3 opacity-50" />
+                              <ChevronRight className="w-3.5 h-3.5 opacity-60 group-hover/sub:text-white group-hover/sub:translate-x-0.5 transition-all" />
                             ) : (
-                              <ChevronRight className="w-3 h-3 opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all" />
+                              <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all" />
                             )}
                           </button>
                           
-                          {/* Nested Submenu (Level 3) if exists */}
+                          {/* Nested Submenu (bay ra bên phải mượt mà khi hover) */}
                           {sub.sub && (
-                            <div className="absolute top-0 left-[100%] ml-1 opacity-0 -translate-x-2 pointer-events-none group-hover/sub:opacity-100 group-hover/sub:translate-x-0 group-hover/sub:pointer-events-auto transition-all duration-300">
-                              <div className="backdrop-blur-3xl border border-white/50 rounded-2xl shadow-2xl py-2 min-w-[240px] bg-white/95 ring-1 ring-black/5">
+                            <div className="absolute top-0 left-full pl-2 opacity-0 -translate-x-2 pointer-events-none group-hover/sub:opacity-100 group-hover/sub:translate-x-0 group-hover/sub:pointer-events-auto transition-all duration-200 z-[110]">
+                              <div className="backdrop-blur-3xl border border-white/60 rounded-2xl shadow-2xl py-2 min-w-[220px] bg-white/95 ring-1 ring-black/5">
                                 {sub.sub.map((deepSub) => (
                                   <button 
                                     key={t(lang, deepSub.label, deepSub.enLabel)}
-                                    onClick={() => { nav(deepSub.page); setActiveMenu(null); }}
-                                    className="w-full text-left px-6 py-2.5 text-[13px] font-bold text-[#003B5C] hover:bg-gradient-to-r hover:from-[#1e64ae] hover:to-[#77c14d] hover:text-white transition-all flex items-center justify-between group/deep"
+                                    onClick={(e) => { e.stopPropagation(); nav(deepSub.page); setActiveMenu(null); }}
+                                    className="w-full text-left px-5 py-2.5 text-[13px] font-bold text-[#003B5C] hover:bg-gradient-to-r hover:from-[#1e64ae] hover:to-[#77c14d] hover:text-white transition-all flex items-center justify-between group/deep cursor-pointer"
                                   >
-                                    {t(lang, deepSub.label, deepSub.enLabel)}
-                                    <ChevronRight className="w-3 h-3 opacity-0 group-hover/deep:opacity-100 group-hover/deep:translate-x-1 transition-all" />
+                                    <span>{t(lang, deepSub.label, deepSub.enLabel)}</span>
+                                    <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover/deep:opacity-100 group-hover/deep:translate-x-1 transition-all" />
                                   </button>
                                 ))}
                               </div>
@@ -462,14 +469,14 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
     ].filter(Boolean);
   }, []);
 
-  // Cụm 2: TREND TOUR - TOUR CHÂU ÂU & HOA KỲ ĐẲNG CẤP
+  // Cụm 2: TREND TOUR - TOUR CHÂU ÂU & HOA KỲ ĐẲNG CẤP (Đầy đủ 4 tour chuẩn)
   const trendTours = useMemo(() => {
     return [
-      TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-us-west")!,      // Bờ Tây Hoa Kỳ (Mỹ)
+      (TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-us-bo-tay") || TOUR_DATASET.Tour_Chau_My[0])!,      // Bờ Tây Hoa Kỳ (Mỹ)
       TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-tay-au")!,    // Tây Âu: Pháp - Thụy Sĩ - Ý - Vatican
       TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-nam-au")!,    // Nam Âu: Maroc - Tây Ban Nha - Bồ Đào Nha
       TOUR_DATASET.Tour_Ngoai_Nuoc.find(t => t.id === "tour-eu-dong-au")!,   // Đông Âu: Lãng Mạn Sông Danube
-    ].filter(Boolean);
+    ].filter(Boolean).slice(0, 4);
   }, []);
 
   // Cụm 3: TOUR ĐỘC BẢN & DI SẢN (Hành trình vàng thế giới)
