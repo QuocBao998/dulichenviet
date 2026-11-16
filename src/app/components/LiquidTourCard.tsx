@@ -283,71 +283,126 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         </div>
 
         {/* Price & Arrow Action Button */}
-        <div className="flex items-end justify-between gap-2 pt-3 border-t border-gray-100/80">
-          <div className="min-w-0 flex-1">
-            {featuredHighlight && !isContact ? (
-              <div className="transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.06] origin-left">
-                {/* Top micro-row: swaps smoothly from GIÁ TỪ to crossed-out original price on hover */}
-                <div className="relative h-4 mb-0.5 overflow-hidden">
-                  <span className="block text-[10px] text-gray-400 font-bold uppercase tracking-wider transition-all duration-250 group-hover:opacity-0 group-hover:-translate-y-2">
-                    {t(lang, "GIÁ TỪ", "FROM")}
-                  </span>
-                  {originalPriceFormatted && (
-                    <div className="absolute inset-0 flex items-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-                      <span className="text-[11px] font-bold text-slate-400 line-through decoration-red-500 decoration-2 tabular-nums whitespace-nowrap">
-                        {originalPriceFormatted}
+        {featuredHighlight && !isContact ? (
+          <div className="relative pt-3 mt-1">
+            <div className="relative flex items-center justify-between gap-2">
+              {/* Red Brush-Stroke Ribbon Price Container (with rhythmic heartbeat pulse) */}
+              <div className="relative flex-1 min-w-0 -ml-3 transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.04] origin-left">
+                <div
+                  className="brush-beat relative px-3.5 sm:px-4 py-3 pr-5 select-none"
+                  style={{ animationDelay: `${(index % 4) * 0.45}s` }}
+                >
+                  {/* Organic Vector Brush-Stroke Background */}
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 280 88"
+                    preserveAspectRatio="none"
+                    className="pointer-events-none absolute inset-0 w-full h-full overflow-visible"
+                  >
+                    <defs>
+                      <linearGradient id={`brushGrad-${index}`} x1="0%" y1="0%" x2="100%" y2="15%">
+                        <stop offset="0%" stopColor="#9E140B" />
+                        <stop offset="48%" stopColor="#DC2626" />
+                        <stop offset="100%" stopColor="#F0381F" />
+                      </linearGradient>
+                    </defs>
+                    {/* Main brush stroke body with frayed bristle edges */}
+                    <path
+                      d="M14,14 C55,8 128,4 205,7 C242,8 265,6 277,11 L268,18 L279,22 L266,31 L276,40 L264,49 L274,59 L261,66 L270,74 C232,78 164,82 95,79 C52,77 24,82 4,76 L15,67 L2,60 L14,50 L4,41 L16,33 L6,25 L17,19 Z"
+                      fill={`url(#brushGrad-${index})`}
+                    />
+                    {/* Subtle warm vermilion dry-brush accent highlight */}
+                    <path
+                      d="M28,20 C88,14 166,12 246,15 C255,15 262,17 255,21 C182,19 98,21 32,26 C24,26 22,21 28,20 Z"
+                      fill="#FF7A59"
+                      opacity="0.28"
+                    />
+                  </svg>
+
+                  {/* Text Content Inside Brush Ribbon */}
+                  <div className="relative z-10 flex flex-col">
+                    {/* Top line: GIÁ TỪ + subtle crossed-out reference price on hover */}
+                    <div className="flex items-center gap-2 mb-1 pl-0.5">
+                      <span className="text-[10px] font-black text-white/95 uppercase tracking-wider leading-none drop-shadow-sm">
+                        {t(lang, "GIÁ TỪ", "FROM")}
                       </span>
-                      <span className="text-[10px] font-black text-red-600 uppercase tracking-tight whitespace-nowrap">
-                        -12%
+                      {originalPriceFormatted && (
+                        <span className="text-[10px] font-bold text-white/80 line-through decoration-white/90 decoration-[1.5px] tabular-nums opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 leading-none">
+                          {originalPriceFormatted}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Swaying Oversized Yellow-Orange Gradient Price Digits + VNĐ */}
+                    <div
+                      className="price-gentle-sway items-baseline gap-1 whitespace-nowrap"
+                      style={{ animationDelay: `${(index % 4) * 0.45}s` }}
+                    >
+                      <span className="text-[28px] sm:text-[30px] lg:text-[23px] xl:text-[29px] font-black tracking-[-0.03em] tabular-nums leading-[0.95] bg-gradient-to-b from-[#FFF7AD] via-[#FFC82B] to-[#FF6A00] bg-clip-text text-transparent drop-shadow-[0_2px_3px_rgba(95,10,5,0.85)]">
+                        {tour.priceFormatted.replace(/\s*VNĐ$/i, "").trim()}
+                      </span>
+                      <span className="text-[11px] lg:text-[10px] xl:text-xs font-black tracking-wide leading-none bg-gradient-to-b from-[#FFF7AD] via-[#FFC82B] to-[#FF7B00] bg-clip-text text-transparent drop-shadow-[0_1.5px_2px_rgba(95,10,5,0.8)]">
+                        VNĐ
                       </span>
                     </div>
-                  )}
-                </div>
-
-                {/* Main blinking red promotional price */}
-                <div className="text-2xl font-black tracking-tight tabular-nums leading-tight price-blink-red">
-                  {tour.priceFormatted}
+                  </div>
                 </div>
               </div>
-            ) : (
-              <>
-                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
-                  {t(lang, "GIÁ TỪ", "FROM")}
-                </div>
-                {isContact ? (
-                  <div className="text-xl font-black text-[#1e64ae]">
-                    {t(lang, "Liên hệ", "Contact")}
-                  </div>
-                ) : (
-                  <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651] tabular-nums">
-                    {tour.priceFormatted}
-                  </div>
-                )}
-              </>
-            )}
+
+              {/* Frosted Glass Sky-Blue Arrow CTA (matching reference screenshot 2) */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(tour);
+                }}
+                aria-label="Xem chi tiết"
+                className="relative z-20 -ml-2.5 w-10 h-10 xl:w-11 xl:h-11 rounded-2xl bg-[#EBF5FF]/95 backdrop-blur-md border border-white text-[#1e64ae] group-hover:bg-gradient-to-r group-hover:from-[#1e64ae] group-hover:to-[#00A651] group-hover:text-white group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-[0_8px_20px_rgba(30,100,174,0.18)] group-hover:scale-105 shrink-0 cursor-pointer"
+              >
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+
             {tour.priceNote && (
-              <div className="text-[11px] text-gray-500 font-medium mt-0.5 line-clamp-1" title={tour.priceNote}>
+              <div className="text-[11px] text-gray-500 font-medium mt-1.5 line-clamp-1" title={tour.priceNote}>
                 {tour.priceNote}
               </div>
             )}
           </div>
+        ) : (
+          <div className="flex items-end justify-between gap-2 pt-3 border-t border-gray-100/80">
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
+                {t(lang, "GIÁ TỪ", "FROM")}
+              </div>
+              {isContact ? (
+                <div className="text-xl font-black text-[#1e64ae]">
+                  {t(lang, "Liên hệ", "Contact")}
+                </div>
+              ) : (
+                <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651] tabular-nums">
+                  {tour.priceFormatted}
+                </div>
+              )}
+              {tour.priceNote && (
+                <div className="text-[11px] text-gray-500 font-medium mt-0.5 line-clamp-1" title={tour.priceNote}>
+                  {tour.priceNote}
+                </div>
+              )}
+            </div>
 
-          {/* Rounded square arrow button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(tour);
-            }}
-            aria-label="Xem chi tiết"
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 ${
-              featuredHighlight
-                ? "bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-gradient-to-r group-hover:from-[#DC2626] group-hover:to-[#FF5252] group-hover:text-white group-hover:shadow-lg group-hover:shadow-red-500/25 group-hover:scale-105"
-                : "bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-[#1e64ae] group-hover:text-white"
-            }`}
-          >
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
+            {/* Rounded square arrow button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(tour);
+              }}
+              aria-label="Xem chi tiết"
+              className="w-11 h-11 rounded-2xl bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-[#1e64ae] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0"
+            >
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </div>
+        )}
       </div>
     </Motion.div>
   );
