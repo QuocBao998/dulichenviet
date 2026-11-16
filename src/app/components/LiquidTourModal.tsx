@@ -106,7 +106,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                 <span className="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold mb-2">
                   {tour.country}
                 </span>
-                <h2 className="text-xl sm:text-2xl font-black leading-snug drop-shadow-md">
+                <h2 className="text-xl sm:text-2xl font-extrabold leading-[1.35] uppercase drop-shadow-md">
                   {tour.title}
                 </h2>
               </div>

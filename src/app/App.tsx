@@ -639,7 +639,11 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
       </section>
 
       {/* ── CỤM 1: Tour Nổi Bật Nhất ── */}
-      <section className="max-w-7xl mx-auto px-4 mt-20 mb-16 overflow-visible">
+      <section className="relative max-w-7xl mx-auto px-4 mt-20 mb-16 overflow-visible">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-x-6 top-16 bottom-0 rounded-[3rem] bg-gradient-to-br from-[#1e64ae]/[0.04] via-red-500/[0.03] to-[#00A651]/[0.04] blur-2xl -z-10"
+        />
         <Motion.div 
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
           variants={fadeInUp}
@@ -672,6 +676,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
               key={tour.id}
               tour={tour}
               index={index}
+              featuredHighlight
               badgeType={index === 0 ? "hot" : index === 1 ? "new" : index === 2 ? "price" : "trend"}
               onSelect={(t) => setSelectedHomeTour(t)}
               onBook={(t) => setSelectedHomeTour(t)}

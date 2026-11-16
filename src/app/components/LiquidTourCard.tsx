@@ -41,13 +41,20 @@ interface LiquidTourCardProps {
   onBook?: (tour: TourItem) => void;
   index?: number;
   badgeType?: "hot" | "new" | "price" | "local" | "trend" | "unique";
+  featuredHighlight?: boolean;
 }
 
 export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardProps>(
-  function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType }, ref) {
+  function LiquidTourCard({ tour, onSelect, onBook, index = 0, badgeType, featuredHighlight = false }, ref) {
   const { lang } = useLang();
   const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
   const tourImg = getSafeTourImage(tour, index);
+
+  const originalPriceFormatted = React.useMemo(() => {
+    if (!featuredHighlight || typeof tour.price !== "number" || tour.price <= 0) return null;
+    const bump = Math.max(1000000, Math.round((tour.price * 0.12) / 100000) * 100000);
+    return `${(tour.price + bump).toLocaleString("vi-VN")} VNĐ`;
+  }, [featuredHighlight, tour.price]);
 
   // Flag or country emoji
   const getCountryDisplay = (country: string, category?: TourItem["category"]) => {
@@ -167,9 +174,18 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.45, delay: Math.min(index * 0.07, 0.35), ease: "easeOut" }}
-      whileHover={{ y: -8, transition: { duration: 0.25 } }}
+      whileHover={{
+        y: featuredHighlight ? -10 : -8,
+        transition: featuredHighlight
+          ? { type: "spring", stiffness: 320, damping: 22 }
+          : { duration: 0.25 }
+      }}
       onClick={() => onSelect(tour)}
-      className="group relative flex flex-col rounded-[2.2rem] overflow-hidden bg-white border border-gray-100 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_20px_50px_-10px_rgba(30,100,174,0.18)] transition-all duration-300 cursor-pointer"
+      className={`group relative flex flex-col rounded-[2.2rem] overflow-hidden bg-white border transition-all duration-300 cursor-pointer ${
+        featuredHighlight
+          ? "border-gray-100/90 shadow-[0_14px_42px_-12px_rgba(0,59,92,0.09)] hover:border-red-200/80 hover:shadow-[0_26px_58px_-12px_rgba(30,100,174,0.2),0_12px_28px_-8px_rgba(220,38,38,0.16)]"
+          : "border-gray-100 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_20px_50px_-10px_rgba(30,100,174,0.18)]"
+      }`}
     >
       {/* ── Media slot with Top & Bottom Overlays ── */}
       <div className="relative h-60 md:h-64 w-full overflow-hidden shrink-0 rounded-t-[2.2rem]">
@@ -186,6 +202,12 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
           loading="lazy"
         />
+
+        {/* Diagonal Liquid Glass Sheen on Hover */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-[180%] transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]"
+        />
         
         {/* Soft bottom vignette for country tag contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -195,7 +217,7 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
           {renderBadge()}
 
           {/* Star Circle Button */}
-          <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md border border-white/50 flex items-center justify-center text-amber-400 shadow-sm transition-transform group-hover:scale-110 shrink-0">
+          <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md border border-white/50 flex items-center justify-center text-amber-400 shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12 shrink-0">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
           </div>
         </div>
@@ -220,9 +242,9 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
             </div>
           )}
 
-          {/* Title - Bold navy 2 lines */}
+          {/* Title - Crisp bold navy 2 lines with headroom for Vietnamese stacked diacritics */}
           <h3
-            className="text-[17px] md:text-lg font-black text-[#003B5C] leading-snug line-clamp-2 mb-4 group-hover:text-[#1e64ae] transition-colors"
+            className="text-[17px] md:text-lg font-extrabold text-[#003B5C] leading-[1.42] tracking-[-0.01em] pt-0.5 uppercase line-clamp-2 mb-4 group-hover:text-[#1e64ae] transition-colors"
             title={tour.title}
           >
             {tour.title}
@@ -261,19 +283,47 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         </div>
 
         {/* Price & Arrow Action Button */}
-        <div className="flex items-end justify-between gap-2 pt-2 border-t border-gray-50">
-          <div className="min-w-0">
-            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
-              {t(lang, "GIÁ TỪ", "FROM")}
-            </div>
-            {isContact ? (
-              <div className="text-xl font-black text-[#1e64ae]">
-                {t(lang, "Liên hệ", "Contact")}
+        <div className="flex items-end justify-between gap-2 pt-3 border-t border-gray-100/80">
+          <div className="min-w-0 flex-1">
+            {featuredHighlight && !isContact ? (
+              <div className="transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.06] origin-left">
+                {/* Top micro-row: swaps smoothly from GIÁ TỪ to crossed-out original price on hover */}
+                <div className="relative h-4 mb-0.5 overflow-hidden">
+                  <span className="block text-[10px] text-gray-400 font-bold uppercase tracking-wider transition-all duration-250 group-hover:opacity-0 group-hover:-translate-y-2">
+                    {t(lang, "GIÁ TỪ", "FROM")}
+                  </span>
+                  {originalPriceFormatted && (
+                    <div className="absolute inset-0 flex items-center gap-1.5 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+                      <span className="text-[11px] font-bold text-slate-400 line-through decoration-red-500 decoration-2 tabular-nums whitespace-nowrap">
+                        {originalPriceFormatted}
+                      </span>
+                      <span className="text-[10px] font-black text-red-600 uppercase tracking-tight whitespace-nowrap">
+                        -12%
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Main blinking red promotional price */}
+                <div className="text-2xl font-black tracking-tight tabular-nums leading-tight price-blink-red">
+                  {tour.priceFormatted}
+                </div>
               </div>
             ) : (
-              <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651]">
-                {tour.priceFormatted}
-              </div>
+              <>
+                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
+                  {t(lang, "GIÁ TỪ", "FROM")}
+                </div>
+                {isContact ? (
+                  <div className="text-xl font-black text-[#1e64ae]">
+                    {t(lang, "Liên hệ", "Contact")}
+                  </div>
+                ) : (
+                  <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651] tabular-nums">
+                    {tour.priceFormatted}
+                  </div>
+                )}
+              </>
             )}
             {tour.priceNote && (
               <div className="text-[11px] text-gray-500 font-medium mt-0.5 line-clamp-1" title={tour.priceNote}>
@@ -289,7 +339,11 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
               onSelect(tour);
             }}
             aria-label="Xem chi tiết"
-            className="w-11 h-11 rounded-2xl bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-[#1e64ae] group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm shrink-0"
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm shrink-0 ${
+              featuredHighlight
+                ? "bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-gradient-to-r group-hover:from-[#DC2626] group-hover:to-[#FF5252] group-hover:text-white group-hover:shadow-lg group-hover:shadow-red-500/25 group-hover:scale-105"
+                : "bg-[#EEF4FB] text-[#1e64ae] group-hover:bg-[#1e64ae] group-hover:text-white"
+            }`}
           >
             <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
           </button>
