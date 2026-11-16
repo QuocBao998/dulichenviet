@@ -479,6 +479,26 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
     ].filter(Boolean);
   }, []);
 
+  // Cụm 4: TOUR TRONG NƯỚC NỔI BẬT (4 tour tiêu biểu Bắc - Trung - Nam - Miền Tây)
+  const trongNuocTours = useMemo(() => {
+    return [
+      TOUR_DATASET.Tour_Trong_Nuoc.find(t => t.id === "tour-vn-hanoi-sapa-5n4d")!,
+      TOUR_DATASET.Tour_Trong_Nuoc.find(t => t.id === "tour-vn-dalat-lhct-3n3d")!,
+      TOUR_DATASET.Tour_Trong_Nuoc.find(t => t.id === "tour-vn-danang-hue-4n3d")!,
+      TOUR_DATASET.Tour_Trong_Nuoc.find(t => t.id === "tour-vn-camau-chaudoc-4n3d")!,
+    ].filter(Boolean);
+  }, []);
+
+  // Cụm 5: TOUR HÀNH HƯƠNG TÂM LINH (Công Giáo & Phật Giáo)
+  const hanhHuongTours = useMemo(() => {
+    return [
+      TOUR_DATASET.Tour_Hanh_Huong.find(t => t.id === "evg-hh2")!,
+      TOUR_DATASET.Tour_Hanh_Huong.find(t => t.id === "evg-hh1")!,
+      TOUR_DATASET.Tour_Hanh_Huong.find(t => t.id === "evg-nbcx-2026")!,
+      TOUR_DATASET.Tour_Hanh_Huong.find(t => t.id === "evg-dhv-chauau")!,
+    ].filter(Boolean);
+  }, []);
+
   const reasons = [
     { icon: <Award className="w-8 h-8" />, title: "20+ Năm Kinh Nghiệm", desc: "Đội ngũ hướng dẫn viên chuyên nghiệp, am hiểu sâu s���c từng điểm đến." },
     { icon: <Shield className="w-8 h-8" />, title: "Cam Kết Chất Lượng", desc: "Dịch vụ đúng cam kết, chuẩn 5 sao, mang lại trải nghiệm hoàn hảo." },
@@ -566,7 +586,7 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                   value={dest} onChange={(e) => setDest(e.target.value)}
                 >
                   <option value="" className="text-gray-400">{t(lang, "Bạn muốn đi đâu?", "Where to?")}</option>
-                  {["Đài Loan", "Nhật Bản", "Dubai", "Bhutan", "Thổ Nhĩ Kỳ", "Tây Âu (Pháp - Thụy Sĩ - Ý)", "Đông Âu (Áo - Séc - Đức - Hungary)", "Nam Âu (Tây Ban Nha - Bồ Đào Nha - Maroc)"].map((d) => (
+                  {["Việt Nam (Miền Bắc - Đà Lạt - Đà Nẵng - Miền Tây)", "Đài Loan", "Nhật Bản", "Dubai", "Bhutan", "Thổ Nhĩ Kỳ", "Tây Âu (Pháp - Thụy Sĩ - Ý)", "Đông Âu (Áo - Séc - Đức - Hungary)", "Nam Âu (Tây Ban Nha - Bồ Đào Nha - Maroc)"].map((d) => (
                     <option key={d} value={d} className="text-[#003B5C] font-semibold">{d}</option>
                   ))}
                 </select>
@@ -608,7 +628,8 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
-                  if (type.includes("Trong Nước")) nav("tour-trong-nuoc");
+                  if (type.includes("Hành Hương") || type.includes("Pilgrimage")) nav("tour-hanh-huong");
+                  else if (type.includes("Trong Nước") || dest.includes("Việt Nam")) nav("tour-trong-nuoc");
                   else if (type.includes("Ngoài Nước") || dest) nav("tour-nuoc-ngoai");
                   else nav("tour");
                 }}
@@ -746,6 +767,92 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
           ))}
         </div>
       </section>
+
+      {/* ── CỤM 4: TOUR DU LỊCH TRONG NƯỚC ── */}
+      {trongNuocTours.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 my-16 overflow-visible">
+          <Motion.div 
+            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
+            variants={fadeInUp}
+            className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+          >
+            <div>
+              <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
+                <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "KHÁM PHÁ VIỆT NAM", "DISCOVER VIETNAM")}
+              </p>
+              <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
+                {t(lang, "TOUR TRONG NƯỚC NỔI BẬT", "FEATURED DOMESTIC TOURS")}
+              </h2>
+              <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
+                {t(lang, "Trọn vẹn vẻ đẹp ba miền từ Sapa, Hạ Long, Đà Nẵng, Đà Lạt đến Miền Tây sông nước & Đất Mũi Cà Mau.", "Explore Vietnam from North to South: Sapa, Ha Long, Da Nang, Da Lat & the Mekong Delta.")}
+              </p>
+            </div>
+            <button 
+              onClick={() => nav("tour-trong-nuoc")} 
+              className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
+            >
+              <span>{t(lang, "Xem tất cả tour trong nước", "View all domestic tours")}</span>
+              <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
+            </button>
+          </Motion.div>
+
+          {/* 4 Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {trongNuocTours.map((tour, index) => (
+              <LiquidTourCard
+                key={tour.id}
+                tour={tour}
+                index={index}
+                onSelect={(t) => setSelectedHomeTour(t)}
+                onBook={(t) => setSelectedHomeTour(t)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── CỤM 5: TOUR HÀNH HƯƠNG TÂM LINH ── */}
+      {hanhHuongTours.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 my-16 overflow-visible">
+          <Motion.div 
+            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }}
+            variants={fadeInUp}
+            className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+          >
+            <div>
+              <p className="text-[#00A651] text-xs md:text-sm font-extrabold tracking-[0.2em] uppercase mb-2 flex items-center gap-2">
+                <span className="w-8 h-0.5 bg-[#00A651] rounded-full" /> {t(lang, "HÀNH TRÌNH TÂM LINH", "SPIRITUAL JOURNEYS")}
+              </p>
+              <h2 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight uppercase">
+                {t(lang, "TOUR HÀNH HƯƠNG NỔI BẬT", "FEATURED PILGRIMAGE TOURS")}
+              </h2>
+              <p className="mt-2 text-sm md:text-base text-gray-500 font-medium">
+                {t(lang, "Chiêm bái các thánh tích Phật giáo & Công giáo linh thiêng trong nước và quốc tế.", "Sacred Buddhist & Catholic pilgrimage journeys in Vietnam and around the world.")}
+              </p>
+            </div>
+            <button 
+              onClick={() => nav("tour-hanh-huong")} 
+              className="text-[#1e64ae] font-black text-xs md:text-sm flex items-center gap-2 hover:gap-3 transition-all group bg-white/80 hover:bg-white backdrop-blur-md px-5 py-2.5 rounded-full border border-white/80 shadow-sm hover:shadow cursor-pointer"
+            >
+              <span>{t(lang, "Xem tất cả tour hành hương", "View all pilgrimage tours")}</span>
+              <ArrowRight className="w-4 h-4 group-hover:text-[#00A651] transition-colors" />
+            </button>
+          </Motion.div>
+
+          {/* 4 Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {hanhHuongTours.map((tour, index) => (
+              <LiquidTourCard
+                key={tour.id}
+                tour={tour}
+                index={index}
+                onSelect={(t) => setSelectedHomeTour(t)}
+                onBook={(t) => setSelectedHomeTour(t)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Home Page Tour Detail Modal ── */}
       <AnimatePresence>

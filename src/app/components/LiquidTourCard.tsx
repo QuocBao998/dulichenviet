@@ -1,6 +1,6 @@
 import React from "react";
 import { motion as Motion } from "motion/react";
-import { Clock, Plane, ArrowRight, Star, CheckCircle } from "lucide-react";
+import { Clock, Plane, Navigation, ArrowRight, Star, CheckCircle } from "lucide-react";
 import { TourItem } from "../../data/toursData";
 import { useLang, t } from "../App";
 
@@ -18,12 +18,21 @@ export const SCENIC_TRAVEL_FALLBACKS = [
   "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&q=85", // Bờ Tây Hoa Kỳ hẻm núi Grand Canyon
 ];
 
+export const DOMESTIC_TRAVEL_FALLBACKS = [
+  "https://images.unsplash.com/photo-1528127269322-539801943592?w=1000&q=85", // Vịnh Hạ Long
+  "https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=1000&q=85", // Tràng An Ninh Bình
+  "https://images.unsplash.com/photo-1643799297057-374040b7db1b?w=1000&q=85", // Đà Lạt
+  "https://images.unsplash.com/photo-1603852452378-a4e8d84324a2?w=1000&q=85", // Cầu Vàng Đà Nẵng
+  "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1000&q=85", // Miền Tây Sông Nước
+];
+
 export function getSafeTourImage(tour: TourItem, idx = 0): string {
   if (tour.image && !tour.image.includes("placehold") && !tour.image.includes("600x400") && !tour.image.includes("via.placeholder")) {
     return tour.image;
   }
+  const pool = tour.category === "trong-nuoc" ? DOMESTIC_TRAVEL_FALLBACKS : SCENIC_TRAVEL_FALLBACKS;
   const hash = (tour.id || tour.code || tour.title || "").split("").reduce((acc, c) => acc + c.charCodeAt(0), idx);
-  return SCENIC_TRAVEL_FALLBACKS[hash % SCENIC_TRAVEL_FALLBACKS.length];
+  return pool[hash % pool.length];
 }
 
 interface LiquidTourCardProps {
@@ -41,7 +50,25 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
   const tourImg = getSafeTourImage(tour, index);
 
   // Flag or country emoji
-  const getCountryDisplay = (country: string) => {
+  const getCountryDisplay = (country: string, category?: TourItem["category"]) => {
+    if (
+      category === "trong-nuoc" ||
+      country.includes("Việt Nam") ||
+      country.includes("Miền Tây") ||
+      country.includes("Miền Bắc") ||
+      country.includes("Miền Trung") ||
+      country.includes("Đà Lạt") ||
+      country.includes("Huế") ||
+      country.includes("Đà Nẵng") ||
+      country.includes("Tây Ninh") ||
+      country.includes("Nha Trang") ||
+      country.includes("Bảo Lộc") ||
+      country.includes("Tà Đùng") ||
+      country.includes("Tà Xùa") ||
+      country.includes("Cần Thơ") ||
+      country.includes("Mỹ Tho") ||
+      country.includes("Cà Mau")
+    ) return "🇻🇳 " + country;
     if (country.includes("Hàn Quốc")) return "🇰🇷 " + country;
     if (country.includes("Đài Loan")) return "🇹🇼 " + country;
     if (country.includes("Nhật Bản")) return "🇯🇵 " + country;
@@ -57,18 +84,26 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
     if (country.includes("Malaysia") || country.includes("Singapore")) return "🇸🇬 🇲🇾 " + country;
     if (country.includes("Singapore")) return "🇸🇬 " + country;
     if (country.includes("Thổ Nhĩ Kỳ")) return "🇹🇷 " + country;
+    if (country.includes("Châu Âu")) return "🇪🇺 " + country;
     if (country.includes("Tây Âu") || country.includes("Pháp")) return "🇫🇷 🇨🇭 " + country;
     if (country.includes("Đông Âu") || country.includes("Áo") || country.includes("Đức")) return "🇦🇹 🇩🇪 " + country;
     if (country.includes("Nam Âu") || country.includes("Tây Ban Nha") || country.includes("Bồ Đào Nha")) return "🇪🇸 🇵🇹 " + country;
     if (country.includes("Hoa Kỳ") || country.includes("Mỹ") || country.includes("USA")) return "🇺🇸 " + country;
-    if (country.includes("Việt Nam")) return "🇻🇳 " + country;
     return "✈️ " + country;
   };
 
   // Badge styling matching the user's screenshot
   const renderBadge = () => {
     const rawBadge = (tour.badge || "HOT").toUpperCase();
-    
+
+    if ((tour.category === "trong-nuoc" || tour.cats?.includes("hanh-huong")) && tour.badge) {
+      return (
+        <span className="px-3.5 py-1.5 rounded-full font-black text-[11px] text-[#003B5C] bg-white/95 backdrop-blur-md shadow-md uppercase tracking-wide">
+          {tour.badge}
+        </span>
+      );
+    }
+
     // Determine style based on badge content or badgeType prop
     if (badgeType === "hot" || rawBadge.includes("HOT") || rawBadge.includes("SIÊU PHẨM")) {
       return (
@@ -110,7 +145,7 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
     if (badgeType === "local" || tour.category === "trong-nuoc") {
       return (
         <span className="px-3.5 py-1.5 rounded-full font-black text-xs text-[#003B5C] bg-white shadow-md uppercase tracking-wide">
-          NỘI ĐỊA
+          {tour.badge || "NỘI ĐỊA"}
         </span>
       );
     }
@@ -121,6 +156,8 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
       </span>
     );
   };
+
+  const isAirTransport = tour.category !== "trong-nuoc" || tour.airline.toLowerCase().includes("bay");
 
   return (
     <Motion.div
@@ -139,11 +176,12 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         <img
           src={tourImg}
           alt={tour.title}
+          referrerPolicy="no-referrer"
           onError={(e) => {
             const target = e.currentTarget as HTMLImageElement;
             target.onerror = null;
-            const fallback = SCENIC_TRAVEL_FALLBACKS[index % SCENIC_TRAVEL_FALLBACKS.length];
-            target.src = fallback;
+            const pool = tour.category === "trong-nuoc" ? DOMESTIC_TRAVEL_FALLBACKS : SCENIC_TRAVEL_FALLBACKS;
+            target.src = pool[index % pool.length];
           }}
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
           loading="lazy"
@@ -153,11 +191,11 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
         {/* Top Badges: Left Badge + Right Star Circle */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none">
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none gap-2">
           {renderBadge()}
 
           {/* Star Circle Button */}
-          <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md border border-white/50 flex items-center justify-center text-amber-400 shadow-sm transition-transform group-hover:scale-110">
+          <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md border border-white/50 flex items-center justify-center text-amber-400 shadow-sm transition-transform group-hover:scale-110 shrink-0">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
           </div>
         </div>
@@ -165,7 +203,7 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         {/* Bottom Country Pill */}
         <div className="absolute bottom-4 left-4 z-10">
           <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/55 backdrop-blur-md border border-white/20 text-white text-xs font-bold shadow-sm">
-            <span>{getCountryDisplay(tour.country)}</span>
+            <span>{getCountryDisplay(tour.country, tour.category)}</span>
           </div>
         </div>
       </div>
@@ -173,6 +211,15 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
       {/* ── Card Content Body ── */}
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
+          {/* Tour Code */}
+          {tour.code && (
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#EEF4FB] text-[#1e64ae] font-mono text-[11px] font-black tracking-wide">
+                {tour.code}
+              </span>
+            </div>
+          )}
+
           {/* Title - Bold navy 2 lines */}
           <h3
             className="text-[17px] md:text-lg font-black text-[#003B5C] leading-snug line-clamp-2 mb-4 group-hover:text-[#1e64ae] transition-colors"
@@ -181,15 +228,19 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
             {tour.title}
           </h3>
 
-          {/* Metadata pill container: Green Clock + Duration • Blue Plane + Bay khứ hồi */}
+          {/* Metadata pill container: Green Clock + Duration • Blue Transport */}
           <div className="flex items-center gap-2.5 text-xs font-semibold text-gray-500 mb-5 bg-[#F8FAFC] py-2.5 px-4 rounded-full border border-gray-100">
-            <div className="flex items-center gap-1.5 font-bold text-gray-600">
+            <div className="flex items-center gap-1.5 font-bold text-gray-600 shrink-0">
               <Clock className="w-4 h-4 text-[#00A651] shrink-0" />
               <span>{tour.duration}</span>
             </div>
             <span className="text-gray-300 font-bold">•</span>
             <div className="flex items-center gap-1.5 font-bold text-gray-600 truncate">
-              <Plane className="w-4 h-4 text-[#1e64ae] shrink-0" />
+              {isAirTransport ? (
+                <Plane className="w-4 h-4 text-[#1e64ae] shrink-0" />
+              ) : (
+                <Navigation className="w-4 h-4 text-[#1e64ae] shrink-0" />
+              )}
               <span className="truncate">
                 {tour.airline === "Hàng không" ? t(lang, "Bay khứ hồi", "Round trip") : tour.airline}
               </span>
@@ -198,9 +249,9 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
 
           {/* Key Highlights list matching snippet */}
           {tour.highlights && tour.highlights.length > 0 && (
-            <ul className="text-xs text-gray-600 mb-5 space-y-1.5 min-h-[4.2rem]">
-              {tour.highlights.slice(0, 3).map((item, index) => (
-                <li key={index} className="flex items-start gap-2">
+            <ul className="text-xs text-gray-600 mb-5 space-y-1.5 min-h-[3.5rem]">
+              {tour.highlights.slice(0, 3).map((item, idx) => (
+                <li key={idx} className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-[#00A651] shrink-0 mt-0.5" />
                   <span className="line-clamp-1 font-medium text-gray-700">{item}</span>
                 </li>
@@ -210,8 +261,8 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
         </div>
 
         {/* Price & Arrow Action Button */}
-        <div className="flex items-end justify-between pt-2 border-t border-gray-50">
-          <div>
+        <div className="flex items-end justify-between gap-2 pt-2 border-t border-gray-50">
+          <div className="min-w-0">
             <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
               {t(lang, "GIÁ TỪ", "FROM")}
             </div>
@@ -222,6 +273,11 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
             ) : (
               <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] to-[#00A651]">
                 {tour.priceFormatted}
+              </div>
+            )}
+            {tour.priceNote && (
+              <div className="text-[11px] text-gray-500 font-medium mt-0.5 line-clamp-1" title={tour.priceNote}>
+                {tour.priceNote}
               </div>
             )}
           </div>

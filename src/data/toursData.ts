@@ -1,3 +1,6 @@
+import { TOUR_TRONG_NUOC_DATASET } from "./domesticToursData";
+import { TOUR_HANH_HUONG_DATASET } from "./pilgrimageToursData";
+
 export interface FlightInfo {
   airline: string;
   outbound: string;
@@ -36,6 +39,7 @@ export interface TourItem {
   airline: string;
   price: number | null;
   priceFormatted: string;
+  priceNote?: string;
   highlights: string[];
   country: string;
   region: string;
@@ -54,6 +58,7 @@ export interface TourItem {
   cancellationPolicy?: string[];
   visaRequirements?: string[];
   pdfFile: string;
+  pdfUrl?: string;
   giftMeals?: string[];
   galleryImages?: string[];
 }
@@ -5022,9 +5027,15 @@ export const TOUR_TRUNG_QUOC_DATASET: TourItem[] = [
   }
 ];
 
+export { TOUR_TRONG_NUOC_DATASET, TOUR_HANH_HUONG_DATASET };
+
 // Unified dataset structure
 export const TOUR_DATASET = {
-  Tour_Trong_Nuoc: [] as TourItem[],
+  Tour_Trong_Nuoc: [
+    ...TOUR_TRONG_NUOC_DATASET,
+    ...TOUR_HANH_HUONG_DATASET.filter(t => t.cats.includes("trong-nuoc"))
+  ],
+  Tour_Hanh_Huong: TOUR_HANH_HUONG_DATASET,
   Tour_Ngoai_Nuoc: [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, ...TOUR_DONG_NAM_A_DATASET, ...TOUR_CHAU_AU_DATASET, ...TOUR_CHAU_MY_DATASET],
   Tour_Trung_Quoc: [...TOUR_TRUNG_QUOC_DATASET, TOUR_DONG_NAM_A_DATASET.find(t => t.id === 'tour-cn-pek-sha')!].filter(Boolean),
   Tour_Han_Quoc: TOUR_HAN_QUOC_DATASET,
@@ -5034,8 +5045,17 @@ export const TOUR_DATASET = {
   Tour_Chau_My: TOUR_CHAU_MY_DATASET
 };
 
-// ALL_TOURS contains strictly the official verified tours from user-provided PDF files
-export const ALL_TOURS: TourItem[] = [...TOUR_CHAU_A_DATASET, ...TOUR_TRUNG_QUOC_DATASET, ...TOUR_HAN_QUOC_DATASET, ...TOUR_DONG_NAM_A_DATASET, ...TOUR_CHAU_AU_DATASET, ...TOUR_CHAU_MY_DATASET];
+// ALL_TOURS contains all verified tours across domestic, pilgrimage, and international datasets
+export const ALL_TOURS: TourItem[] = [
+  ...TOUR_TRONG_NUOC_DATASET,
+  ...TOUR_HANH_HUONG_DATASET,
+  ...TOUR_CHAU_A_DATASET,
+  ...TOUR_TRUNG_QUOC_DATASET,
+  ...TOUR_HAN_QUOC_DATASET,
+  ...TOUR_DONG_NAM_A_DATASET,
+  ...TOUR_CHAU_AU_DATASET,
+  ...TOUR_CHAU_MY_DATASET
+];
 
 // Filter definitions for subpages - Tên quốc gia gọn gàng, không kèm vế phụ trong ngoặc đơn
 export const COUNTRIES = [

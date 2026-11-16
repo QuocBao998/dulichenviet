@@ -23,18 +23,26 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
     const [activePdfTab, setActivePdfTab] = useState<"all" | "gallery" | "itinerary" | "pricing" | "policy">("all");
 
     const isContact = tour.price === null || tour.priceFormatted === "Liên hệ";
+    const isDomestic = tour.category === "trong-nuoc";
+    const transportLabel = isDomestic ? "Phương Tiện" : "Hàng Không";
+    const fallbackBanner = isDomestic
+      ? "https://images.unsplash.com/photo-1528127269322-539801943592?w=1000&q=85"
+      : "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
 
     const standardIncludes = tour.inclusions && tour.inclusions.length > 0 ? tour.inclusions : [
-      `Phương tiện di chuyển: ${tour.airline} khứ hồi và xe đời mới chất lượng cao suốt tuyến`,
-      "Khách sạn tiêu chuẩn 3 - 5 sao tiện nghi, vị trí trung tâm",
+      `Phương tiện di chuyển: ${tour.airline} và xe du lịch đời mới chất lượng cao suốt tuyến`,
+      "Khách sạn tiêu chuẩn tiện nghi, vị trí trung tâm",
       "Các bữa ăn tiêu chuẩn chất lượng cao theo chương trình",
       "Vé vào cổng tất cả các điểm tham quan theo lịch trình",
       "Hướng dẫn viên chuyên nghiệp, nhiệt tình hỗ trợ 24/7",
-      "Bảo hiểm du lịch quốc tế tối đa 1.000.000.000 VNĐ/người/vụ",
+      isDomestic
+        ? "Bảo hiểm du lịch trong nước tối đa 30.000.000 VNĐ/người/vụ"
+        : "Bảo hiểm du lịch quốc tế tối đa 1.000.000.000 VNĐ/người/vụ",
       "Quà tặng độc quyền: Nón du lịch Én Việt, nước suối hằng ngày"
     ];
 
     const pdfFileName = tour.pdfFile || `CHUONG_TRINH_TOUR_${tour.code}.pdf`;
+    const isPdfPending = tour.pdfUrl === "" && (!tour.itineraryDays || tour.itineraryDays.length === 0);
 
     return (
       <div ref={ref} className="fixed inset-0 z-[100] flex items-center justify-center">
@@ -71,10 +79,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
             {/* Header Banner */}
             <div className="relative h-60 sm:h-72 w-full overflow-hidden shrink-0">
               <img
-                src={tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85"}
+                src={tour.image || fallbackBanner}
                 alt={tour.title}
+                referrerPolicy="no-referrer"
                 onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
+                  (e.currentTarget as HTMLImageElement).src = fallbackBanner;
                 }}
                 className="w-full h-full object-cover"
               />
@@ -118,7 +127,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                 <div className="p-3 rounded-2xl bg-emerald-50/70 border border-emerald-100/80">
                   <div className="text-[10px] font-black uppercase text-emerald-600 mb-1 flex items-center gap-1">
                     <Plane className="w-3 h-3" />
-                    <span>Hàng Không</span>
+                    <span>{transportLabel}</span>
                   </div>
                   <div className="text-xs sm:text-sm font-black text-[#003B5C] truncate">{tour.airline}</div>
                 </div>
@@ -177,7 +186,9 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                             FILE PDF ĐÍNH KÈM
                           </span>
                           <span className="text-[11px] text-white/90 font-medium hidden sm:inline">
-                            Chi tiết toàn bộ hình ảnh & chương trình
+                            {isPdfPending
+                              ? "File PDF chi tiết đang được cập nhật • Liên hệ tư vấn"
+                              : "Chi tiết toàn bộ hình ảnh & chương trình"}
                           </span>
                         </div>
                         <div className="text-sm font-black text-white truncate mt-1" title={pdfFileName}>
@@ -193,7 +204,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                         className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white hover:bg-gray-50 text-red-600 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer hover:scale-105 active:scale-95"
                       >
                         <Eye className="w-4 h-4 text-red-600" />
-                        <span>Xem File PDF</span>
+                        <span>{isPdfPending ? "Xem / Nhận File PDF" : "Xem File PDF"}</span>
                       </button>
                     </div>
                   </div>
@@ -337,6 +348,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                     <span className="text-xs text-gray-400 font-normal ml-1">/ khách</span>
                   </div>
                 )}
+                {tour.priceNote && (
+                  <div className="text-[11px] text-amber-700 font-semibold mt-0.5">
+                    * {tour.priceNote}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -397,17 +413,43 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                       <Printer className="w-4 h-4" />
                       <span className="hidden sm:inline">In Tài Liệu</span>
                     </button>
-                    <a
-                      href={`#`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.print();
-                      }}
-                      className="px-3.5 py-1.5 rounded-xl bg-[#00A651] hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span className="hidden sm:inline">Tải Về</span>
-                    </a>
+                    {tour.pdfUrl ? (
+                      <a
+                        href={tour.pdfUrl}
+                        download={pdfFileName}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3.5 py-1.5 rounded-xl bg-[#00A651] hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span className="hidden sm:inline">Tải PDF Gốc</span>
+                      </a>
+                    ) : isPdfPending ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowPdfViewer(false);
+                          onClose();
+                          openForm?.();
+                        }}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#00A651] hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span className="hidden sm:inline">Liên Hệ Nhận PDF</span>
+                      </button>
+                    ) : (
+                      <a
+                        href={`#`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.print();
+                        }}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#00A651] hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span className="hidden sm:inline">Tải Về</span>
+                      </a>
+                    )}
                     <button
                       type="button"
                       onClick={() => setShowPdfViewer(false)}
@@ -458,7 +500,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                       </h1>
                       <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-bold text-[#003B5C] mt-2">
                         <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-red-600" /> Thời gian: {tour.duration}</span>
-                        <span className="flex items-center gap-1.5"><Plane className="w-4 h-4 text-[#1e64ae]" /> Hàng không: {tour.airline}</span>
+                        <span className="flex items-center gap-1.5"><Plane className="w-4 h-4 text-[#1e64ae]" /> {transportLabel}: {tour.airline}</span>
                         <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-emerald-600" /> Khởi hành: {tour.departure}</span>
                       </div>
                     </div>
@@ -467,10 +509,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-200">
                       <div className="md:col-span-2 relative h-64 sm:h-80 rounded-xl overflow-hidden shadow-md">
                         <img
-                          src={tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85"}
+                          src={tour.image || fallbackBanner}
                           alt={tour.title}
+                          referrerPolicy="no-referrer"
                           onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
+                            (e.currentTarget as HTMLImageElement).src = fallbackBanner;
                           }}
                           className="w-full h-full object-cover"
                         />
@@ -492,13 +535,16 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                         </div>
 
                         <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
-                          <div className="text-[11px] font-bold text-gray-500 uppercase">Hãng hàng không</div>
+                          <div className="text-[11px] font-bold text-gray-500 uppercase">{transportLabel}</div>
                           <div className="text-sm font-black text-[#1e64ae]">{tour.airline}</div>
                         </div>
 
                         <div className="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
                           <div className="text-[11px] font-bold text-gray-500 uppercase">Giá trọn gói từ</div>
                           <div className="text-xl font-black text-red-600">{tour.priceFormatted}</div>
+                          {tour.priceNote && (
+                            <div className="text-[11px] text-gray-500 font-medium mt-0.5">{tour.priceNote}</div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -528,6 +574,36 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                       </div>
                     )}
 
+                    {/* Pending PDF Notice (when pdfUrl is empty) */}
+                    {isPdfPending && (
+                      <div className="p-5 rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-start gap-3">
+                          <Info className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
+                          <div className="text-xs sm:text-sm text-amber-950 space-y-1">
+                            <div className="font-black uppercase text-amber-800">
+                              File PDF chương trình chi tiết đang được cập nhật
+                            </div>
+                            <p className="text-amber-900/90 leading-relaxed">
+                              Quý khách có thể xem thông tin tóm tắt bên dưới hoặc liên hệ trực tiếp Hotline <strong>0983.056.056</strong> / đăng ký tư vấn để nhận file PDF lịch trình chi tiết và báo giá ưu đãi nhất qua Zalo/Email.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowPdfViewer(false);
+                              onClose();
+                              openForm?.();
+                            }}
+                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white font-black text-xs uppercase tracking-wider shadow-md hover:brightness-110 transition-all cursor-pointer whitespace-nowrap"
+                          >
+                            Đăng Ký Nhận File PDF
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     {/* 5. Rich Image Gallery of Program Destinations */}
                     <div>
                       <div className="flex items-center justify-between border-b-2 border-red-500 pb-2 mb-4">
@@ -545,6 +621,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                               <img
                                 src={imgUrl}
                                 alt={`Điểm đến ${idx + 1}`}
+                                referrerPolicy="no-referrer"
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
@@ -556,10 +633,11 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                         ) : (
                           <div className="col-span-4 relative h-56 rounded-xl overflow-hidden shadow-sm border border-gray-200">
                             <img
-                              src={tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85"}
+                              src={tour.image || fallbackBanner}
                               alt={tour.title}
+                              referrerPolicy="no-referrer"
                               onError={(e) => {
-                                (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=1000&q=85";
+                                (e.currentTarget as HTMLImageElement).src = fallbackBanner;
                               }}
                               className="w-full h-full object-cover"
                             />
@@ -642,7 +720,7 @@ export const LiquidTourModal = React.forwardRef<HTMLDivElement, LiquidTourModalP
                                     src={d.image}
                                     alt={d.title}
                                     onError={(e) => {
-                                      (e.currentTarget as HTMLImageElement).src = tour.image || "https://images.unsplash.com/photo-1508248467877-aec1b08de376?w=800&q=80";
+                                      (e.currentTarget as HTMLImageElement).src = tour.image || fallbackBanner;
                                     }}
                                     className="w-full h-full object-cover"
                                   />

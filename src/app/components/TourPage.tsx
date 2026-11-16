@@ -77,17 +77,29 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
   // Base list depending on active page category
   const baseTours = useMemo(() => {
     // Categories without provided files yet -> return [] to display the empty state matching user request
-    if (
-      category === "tour-trong-nuoc" ||
-      category === "tour-mien-bac" ||
-      category === "tour-mien-trung" ||
-      category === "tour-mien-nam" ||
-      category === "tour-gio-chot" ||
-      category === "tour-hanh-huong" ||
-      category === "tour-hanh-huong-cong-giao" ||
-      category === "tour-hanh-huong-phat-giao"
-    ) {
+    if (category === "tour-gio-chot") {
       return [];
+    }
+    if (category === "tour-hanh-huong") {
+      return TOUR_DATASET.Tour_Hanh_Huong;
+    }
+    if (category === "tour-hanh-huong-cong-giao") {
+      return TOUR_DATASET.Tour_Hanh_Huong.filter(t => t.cats.includes("hanh-huong-cong-giao"));
+    }
+    if (category === "tour-hanh-huong-phat-giao") {
+      return TOUR_DATASET.Tour_Hanh_Huong.filter(t => t.cats.includes("hanh-huong-phat-giao"));
+    }
+    if (category === "tour-trong-nuoc") {
+      return TOUR_DATASET.Tour_Trong_Nuoc;
+    }
+    if (category === "tour-mien-bac") {
+      return TOUR_DATASET.Tour_Trong_Nuoc.filter(t => t.cats.includes("mien-bac"));
+    }
+    if (category === "tour-mien-trung") {
+      return TOUR_DATASET.Tour_Trong_Nuoc.filter(t => t.cats.includes("mien-trung"));
+    }
+    if (category === "tour-mien-nam") {
+      return TOUR_DATASET.Tour_Trong_Nuoc.filter(t => t.cats.includes("mien-nam"));
     }
     if (category === "tour-nuoc-ngoai") {
       return TOUR_DATASET.Tour_Ngoai_Nuoc;
@@ -132,7 +144,7 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
         return tour.category === "trong-nuoc" || c === "việt nam" || cats.includes("trong-nuoc") || cats.some(x => x.startsWith("mien-"));
 
       case "trung quốc":
-        return c === "trung quốc" || cats.includes("trung-quoc") || tour.id.startsWith("tour-cn-");
+        return c === "trung quốc" || c.includes("trung quốc") || cats.includes("trung-quoc") || tour.id.startsWith("tour-cn-");
 
       case "hàn quốc":
         return c === "hàn quốc" || cats.includes("han-quoc") || tour.id.startsWith("tour-kr-");
