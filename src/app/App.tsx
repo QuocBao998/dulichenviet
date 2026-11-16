@@ -105,10 +105,6 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
         ]
       },
     ],
-    "ve-may-bay": [
-      { label: "Vé Nội Địa", enLabel: "Domestic Flights", page: "ve-may-bay" },
-      { label: "Vé Quốc Tế", enLabel: "International Flights", page: "ve-may-bay" },
-    ],
     "visa": [
       { label: "Dịch Vụ Passport", enLabel: "Passport Services", page: "visa", tab: "Dịch vụ Passport" },
       { label: "Tư Vấn Visa", enLabel: "Visa Consultation", page: "visa", tab: "Tư vấn Visa" },
@@ -1054,7 +1050,7 @@ function AppContent() {
       {page === "gioi-thieu" && <GioiThieuPage />}
       {page.startsWith("tour") && <TourPage category={page} openForm={() => setIsFormOpen(true)} />}
       {page === "golf" && <GolfPage />}
-      {page === "ve-may-bay" && <VeMayBayPage />}
+      {page === "ve-may-bay" && <VeMayBayPage openForm={() => setIsFormOpen(true)} />}
       {page === "visa" && <VisaPage defaultTab={visaTab} />}
       {page === "thong-tin" && <ThongTinPage defaultTab={thongTinTab} />}
       {page === "thu-vien-anh" && <ThuVienAnhPage nav={navigateTo} />}
