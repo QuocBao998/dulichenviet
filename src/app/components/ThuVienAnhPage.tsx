@@ -515,7 +515,7 @@ export function ThuVienAnhPage({ nav }: { nav: (p: Page, tab?: string) => void }
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651] p-8 md:p-14 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8"
+          className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651] p-8 md:p-14 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 colored-banner-sheen"
         >
           <div className="max-w-2xl text-center md:text-left">
             <span className="text-[#00E676] font-black uppercase tracking-wider text-xs block mb-2">

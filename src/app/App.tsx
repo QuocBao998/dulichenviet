@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, RefObject } from "react";
 import {
   Search, Phone, Mail, MapPin, Menu, X, ArrowRight,
   Plane, Globe, Users, Star, Calendar, Clock, ChevronDown,
@@ -19,7 +19,6 @@ import TeamBuildingVideo from "../imports/Teambuilding.mp4";
 import ChaoCamVideo from "../imports/Cha_o_Cam.mp4";
 import LogoImage from "../imports/Logo.png";
 import PromoImage from "../imports/Gemini_Generated_Image_z8oi6gz8oi6gz8oi.png";
-import HeroImageNew from "../imports/Banner_Khuyen_mai.png.png";
 import HotIcon from "../imports/1108.png";
 import { GioiThieuPage } from "./components/GioiThieuPage";
 import { TourPage } from "./components/TourPage";
@@ -71,12 +70,25 @@ const liquidGlass = "bg-white/60 backdrop-blur-2xl border border-white/50 shadow
 
 
 
+function isUnifiedSubpageRoute(p: Page): boolean {
+  return p.startsWith("tour") || p === "ve-may-bay" || p === "thong-tin";
+}
+
 /* ── Header ── */
-function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) => void }) {
+function Header({
+  current,
+  nav,
+  headerBarRef,
+}: {
+  current: Page;
+  nav: (p: Page, tab?: string) => void;
+  headerBarRef?: RefObject<HTMLDivElement | null>;
+}) {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const isUnifiedSubpage = isUnifiedSubpageRoute(current);
 
   const subMenus: Record<string, { label: string; enLabel: string; page: Page; sub?: { label: string; enLabel: string; page: Page }[] }[]> = {
     "tour": [
@@ -120,11 +132,30 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
   };
 
   return (
-    <header className={`top-0 left-0 w-full z-50 pt-1 transition-all duration-500 ${current !== "home" ? "relative bg-gradient-to-r from-[#1e64ae] via-[#00A651] to-[#77c14d] pb-1 shadow-md" : "absolute"}`}>
-      {/* Soft top gradient glow for better readability */}
-      {current === "home" && <div className="absolute inset-0 h-40 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />}
-      
-      <div className="w-full max-w-[1440px] mx-auto px-4 lg:px-6 relative z-10 flex flex-col items-center gap-3">
+    <header
+      className={`top-0 left-0 w-full z-50 pt-1 transition-colors duration-300 ${
+        current !== "home"
+          ? isUnifiedSubpage
+            ? "relative bg-transparent pb-1"
+            : "relative bg-gradient-to-r from-[#1e64ae] via-[#00A651] to-[#77c14d] pb-1 shadow-md"
+          : "absolute"
+      }`}
+    >
+      {/* Gentle top gradient glow clipped safely to prevent horizontal overflow (handled by unified backdrop on Tour/VeMayBay/ThongTin) */}
+      {!isUnifiedSubpage && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-56 overflow-hidden z-0">
+          {current === "home" && (
+            <div className="absolute inset-x-0 top-0 h-52 bg-gradient-to-b from-black/50 via-black/22 to-transparent" />
+          )}
+          <div className="absolute top-[-50px] md:top-[-80px] left-1/2 -translate-x-1/2 w-[140vw] md:w-[115vw] h-[200px] md:h-[250px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,1)_0%,_rgba(255,255,255,0.9)_30%,_rgba(255,255,255,0)_70%)] blur-md" />
+          <div className="absolute top-[-20px] left-1/2 -translate-x-1/2 w-[80vw] h-[150px] bg-white opacity-80 blur-3xl rounded-full" />
+        </div>
+      )}
+
+      <div
+        ref={headerBarRef}
+        className="w-full max-w-[1440px] mx-auto px-4 lg:px-6 relative z-10 flex flex-col items-center gap-3"
+      >
         
         {/* Logo - Free floating */}
         <Motion.div 
@@ -133,9 +164,6 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10"
         >
-          {/* Cloud-like white background behind logo, reaching the top */}
-          <div className="absolute top-[-50px] md:top-[-80px] left-1/2 -translate-x-1/2 w-[150vw] md:w-[120vw] h-[200px] md:h-[250px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,1)_0%,_rgba(255,255,255,0.9)_30%,_rgba(255,255,255,0)_70%)] pointer-events-none blur-md z-[-1]" />
-          <div className="absolute top-[-20px] left-1/2 -translate-x-1/2 w-[80vw] h-[150px] bg-white opacity-80 blur-3xl rounded-full pointer-events-none z-[-1]" />
           
           <button onClick={() => nav("home")} className="relative group transition-all duration-700 hover:scale-110 active:scale-95">
             <div className="absolute inset-0 bg-white/40 rounded-full blur-2xl opacity-60 scale-150 group-hover:opacity-100 transition-opacity" />
@@ -152,13 +180,21 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="hidden xl:flex w-full max-w-[1440px] mx-auto h-[62px] 2xl:h-[68px] rounded-full bg-white/20 backdrop-blur-xl border border-white/35 shadow-[0_15px_35px_-5px_rgba(0,0,0,0.12)] items-center justify-between px-4 2xl:px-6 py-2 gap-4 relative z-20"
+          className={`hidden xl:flex w-full max-w-[1440px] mx-auto h-[62px] 2xl:h-[68px] rounded-full bg-white/20 backdrop-blur-xl border border-white/35 items-center justify-between px-4 2xl:px-6 py-2 gap-4 relative z-20 ${
+            isUnifiedSubpage
+              ? "shadow-[0_6px_18px_-8px_rgba(0,59,92,0.10)]"
+              : "shadow-[0_15px_35px_-5px_rgba(0,0,0,0.12)]"
+          }`}
         >
           {/* Main Menu */}
           <nav className="flex items-center justify-start gap-1 2xl:gap-3 flex-1 overflow-visible">
             {NAV.map((item, index) => {
               // Position submenus perfectly: middle items centered, right items align-right
               const popoverPos = index > NAV.length - 3 ? "right-0" : index < 2 ? "left-0" : "left-1/2 -translate-x-1/2";
+              const isItemActive =
+                item.page === "tour"
+                  ? current.startsWith("tour")
+                  : current === item.page;
               return (
               <div 
                 key={item.page} 
@@ -168,13 +204,13 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
               >
                 <button
                   onClick={() => nav(item.page)}
-                  className={`relative px-3.5 xl:px-4 2xl:px-5 py-2.5 text-[13px] 2xl:text-[14px] font-black rounded-full transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
-                    current === item.page
+                  className={`relative z-10 px-3.5 xl:px-4 2xl:px-5 py-2.5 text-[13px] 2xl:text-[14px] font-black rounded-full transition-colors duration-300 whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
+                    isItemActive
                       ? "text-white shadow-md"
                       : "text-white hover:text-white hover:bg-white/30"
                   }`}
                 >
-                  {current === item.page && (
+                  {isItemActive && (
                     <Motion.div 
                       layoutId="nav-bg"
                       className="absolute inset-0 bg-gradient-to-r from-[#1e64ae] to-[#77c14d] rounded-full z-0" 
@@ -268,13 +304,18 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
           className="xl:hidden mt-4 max-w-7xl mx-4 overflow-hidden rounded-2xl border border-white/50 bg-white/95 backdrop-blur-2xl shadow-2xl relative z-40 max-h-[70vh] overflow-y-auto"
         >
           <div className="p-3 flex flex-col gap-1">
-            {NAV.map((item) => (
+            {NAV.map((item) => {
+              const isMobileActive =
+                item.page === "tour"
+                  ? current.startsWith("tour")
+                  : current === item.page;
+              return (
               <div key={item.page} className="flex flex-col">
                 <div className="flex items-center">
                   <button
                     onClick={() => { nav(item.page); setOpen(false); }}
                     className={`flex-1 text-left px-5 py-3 text-sm font-bold rounded-xl transition-all ${
-                      current === item.page 
+                      isMobileActive
                         ? "bg-gradient-to-r from-[#1e64ae] to-[#77c14d] text-white shadow-md" 
                         : "text-[#003B5C] hover:bg-blue-50 active:bg-blue-100"
                     }`}
@@ -321,7 +362,31 @@ function Header({ current, nav }: { current: Page; nav: (p: Page, tab?: string) 
                   </div>
                 )}
               </div>
-            ))}
+            )})}
+
+            {/* Mobile / Tablet Language & Book Tour Actions */}
+            <div className="mt-2 pt-3 border-t border-gray-100 flex items-center justify-between gap-3 px-2 pb-1">
+              <div className="flex items-center bg-[#EEF4FB] rounded-full p-1 shrink-0">
+                <button
+                  onClick={() => setLang("vi")}
+                  className={`px-3.5 py-1.5 text-xs font-black rounded-full transition-colors ${lang === "vi" ? "bg-[#1e64ae] text-white shadow-sm" : "text-[#003B5C]/70"}`}
+                >
+                  VN
+                </button>
+                <button
+                  onClick={() => setLang("en")}
+                  className={`px-3.5 py-1.5 text-xs font-black rounded-full transition-colors ${lang === "en" ? "bg-[#1e64ae] text-white shadow-sm" : "text-[#003B5C]/70"}`}
+                >
+                  EN
+                </button>
+              </div>
+              <button
+                onClick={() => { nav("tour"); setOpen(false); }}
+                className="flex-1 bg-gradient-to-r from-[#1e64ae] to-[#77c14d] text-white text-xs font-black px-4 py-2.5 rounded-full uppercase tracking-wide shadow-md whitespace-nowrap text-center cursor-pointer"
+              >
+                {t(lang, "ĐẶT TOUR", "BOOK TOUR")}
+              </button>
+            </div>
           </div>
         </Motion.div>
       )}
@@ -420,7 +485,17 @@ function Footer({ nav }: { nav: (p: Page) => void }) {
 /* ─────────────────────────────────────────────────────────────────────────────
    HOME PAGE
 ───────────────────────────────────────────────────────────────────────────── */
-function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => void }) {
+function HomePage({
+  nav,
+  openForm,
+  isPromoActive,
+  onOpenPromo,
+}: {
+  nav: (p: Page) => void;
+  openForm: () => void;
+  isPromoActive: boolean;
+  onOpenPromo: () => void;
+}) {
   const { lang } = useLang();
   const [dest, setDest] = useState("");
   const [type, setType] = useState("");
@@ -428,20 +503,31 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
   const [heroIndex, setHeroIndex] = useState(0);
 
   const heroBanners = [
-    HeroImageNew,
-    "https://images.unsplash.com/photo-1766721375768-2ddbfeeb1f4e?w=1800&q=80",
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=80",
-    "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=1800&q=80"
+    {
+      src: "/assets/aistudio/Du_thuye__n_giu__a_Vi_nh_Ha__Long-1_a25c2fd3.png",
+      alt: t(lang, "Du thuyền giữa Vịnh Hạ Long - Du lịch Én Việt", "Cruise ship in Ha Long Bay - Én Việt Travel"),
+      positionClass: "object-[58%_68%] sm:object-[56%_66%] lg:object-[55%_75%] min-[1600px]:object-[55%_82%]",
+    },
+    {
+      src: "/assets/aistudio/Nu_i_Phu__Si__be_n_ho___Kawaguchi-2_326a380a.png",
+      alt: t(lang, "Núi Phú Sĩ bên hồ Kawaguchi - Du lịch Én Việt", "Mount Fuji beside Lake Kawaguchi - Én Việt Travel"),
+      positionClass: "object-[50%_26%] sm:object-[50%_24%] lg:object-[50%_20%] min-[1600px]:object-[50%_18%]",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=1800&q=80",
+      alt: t(lang, "Phố châu Âu ven sông - Du lịch Én Việt", "European riverside town - Én Việt Travel"),
+      positionClass: "object-[50%_46%] lg:object-[50%_42%]",
+    },
   ];
 
   useEffect(() => {
-    // Banner đầu tiên (index 0) sẽ hiển thị 10 giây, các banner khác hiển thị 5 giây
+    // Banner đầu tiên (Hạ Long) hiển thị 10 giây, các banner tiếp theo hiển thị 5 giây và lặp lại
     const duration = heroIndex === 0 ? 10000 : 5000;
     const timer = setTimeout(() => {
-      setHeroIndex(prev => (prev + 1) % heroBanners.length);
+      setHeroIndex((prev) => (prev + 1) % heroBanners.length);
     }, duration);
     return () => clearTimeout(timer);
-  }, [heroIndex]);
+  }, [heroIndex, heroBanners.length]);
 
   const [selectedHomeTour, setSelectedHomeTour] = useState<TourItem | null>(null);
 
@@ -496,106 +582,130 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
   }, []);
 
   const reasons = [
-    { icon: <Award className="w-8 h-8" />, title: "20+ Năm Kinh Nghiệm", desc: "Đội ngũ hướng dẫn viên chuyên nghiệp, am hiểu sâu s���c từng điểm đến." },
+    { icon: <Award className="w-8 h-8" />, title: "20+ Năm Kinh Nghiệm", desc: "Đội ngũ hướng dẫn viên chuyên nghiệp, am hiểu sâu sắc từng điểm đến." },
     { icon: <Shield className="w-8 h-8" />, title: "Cam Kết Chất Lượng", desc: "Dịch vụ đúng cam kết, chuẩn 5 sao, mang lại trải nghiệm hoàn hảo." },
     { icon: <Headphones className="w-8 h-8" />, title: "Hỗ Trợ 24/7", desc: "Luôn đồng hành và hỗ trợ khách hàng trong suốt mọi nẻo đường." },
     { icon: <Globe className="w-8 h-8" />, title: "Tất Cả Trong Một", desc: "Tour, vé máy bay, visa – một nơi giải quyết tất cả nhu cầu của bạn." },
   ];
 
+  const handleSearchTours = () => {
+    if (type.includes("Hành Hương") || type.includes("Pilgrimage")) nav("tour-hanh-huong");
+    else if (type.includes("Trong Nước") || dest.includes("Việt Nam")) nav("tour-trong-nuoc");
+    else if (type.includes("Ngoài Nước") || dest) nav("tour-nuoc-ngoai");
+    else nav("tour");
+  };
+
   return (
     <main className="bg-[#f8fcfb] min-h-screen">
-      {/* ── Hero ── */}
-      <section className="relative h-screen min-h-[800px] flex items-center justify-center overflow-hidden bg-black">
+      {/* ── Hero Banner Slideshow (3 ảnh phong cảnh + slogan 2 dòng căn giữa) ── */}
+      <section className="relative w-full h-[370px] sm:h-[440px] md:h-[480px] lg:h-[520px] xl:h-[550px] min-[1600px]:h-[610px] min-[2200px]:h-[680px] flex items-center justify-center overflow-hidden bg-[#002840]">
         <AnimatePresence>
           <Motion.img
             key={heroIndex}
-            initial={{ scale: 1.1, opacity: 0 }}
+            initial={{ scale: 1.07, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            src={heroBanners[heroIndex]}
-            alt="Banner Én Việt"
-            className="absolute inset-0 w-full h-full object-cover"
+            src={heroBanners[heroIndex].src}
+            alt={heroBanners[heroIndex].alt}
+            referrerPolicy="no-referrer"
+            loading={heroIndex === 0 ? "eager" : "auto"}
+            {...({ fetchpriority: heroIndex === 0 ? "high" : "auto" } as Record<string, string>)}
+            className={`absolute inset-0 w-full h-full object-cover ${heroBanners[heroIndex].positionClass}`}
           />
         </AnimatePresence>
-        
-        {/* Richer hero overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#003B5C]/80 via-[#1e64ae]/50 to-[#00A651]/40 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#f8fcfb] via-transparent to-transparent opacity-90" />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 mt-16">
-          <Motion.div 
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="max-w-3xl text-center mx-auto flex flex-col items-center"
+        {/* Subtle top-only contrast scrim for two-tier header legibility on bright skies */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-44 sm:h-48 xl:h-52 bg-gradient-to-b from-black/48 via-black/18 to-transparent z-[1]"
+        />
+
+        {/* Subtle bottom contrast scrim so H1 sitting above the search bar never sinks into bright water/reflections */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-28 sm:h-32 xl:h-36 bg-gradient-to-t from-black/48 via-black/20 to-transparent z-[1]"
+        />
+
+        {/* Centered Two-Line Slogan (without description box or action buttons) */}
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-3 sm:px-4 pt-[118px] pb-[82px] sm:pt-[135px] sm:pb-[92px] md:pt-[142px] md:pb-[105px] lg:pt-[148px] lg:pb-[120px] xl:pt-[150px] xl:pb-[132px] flex justify-center">
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="relative max-w-3xl text-center px-5 sm:px-10 py-3 sm:py-4"
           >
-            
-            <Motion.h1 variants={fadeInUp} className="font-black text-white leading-[1.1] mb-6 drop-shadow-2xl text-[64px]">
-              {t(lang, "Chắp Cánh Đam Mê", "Ignite Your Passion for")} <br />
-              <Motion.span 
-                className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] via-[#00E676] to-[#77c14d] bg-[length:200%_auto] pb-2 text-[64px]"
+            {/* Soft radial contrast scrim only behind slogan letters for bright skies */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-6 -inset-y-3 bg-[radial-gradient(ellipse_at_center,rgba(0,22,44,0.52)_0%,rgba(0,22,44,0.24)_52%,rgba(0,22,44,0)_78%)] rounded-full blur-sm -z-10"
+            />
+            <p className="font-black leading-[1.12] tracking-tight text-[26px] min-[380px]:text-[31px] sm:text-[42px] md:text-[48px] lg:text-[52px] xl:text-[58px] drop-shadow-[0_6px_22px_rgba(0,18,38,0.65)]">
+              <span className="block text-white">
+                {t(lang, "Chắp Cánh Đam Mê", "Ignite Your Passion for")}
+              </span>
+              <Motion.span
+                className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#1e64ae] via-[#00E676] to-[#77c14d] bg-[length:200%_auto] pb-1 drop-shadow-[0_4px_14px_rgba(0,15,35,0.6)]"
                 animate={{ backgroundPosition: ["0% center", "200% center"] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
               >
                 {t(lang, "Khám Phá Thế Giới", "Exploring the World")}
               </Motion.span>
-            </Motion.h1>
-            
-            <Motion.p variants={fadeInUp} className="text-white/95 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl font-semibold drop-shadow-lg backdrop-blur-sm bg-black/10 p-4 rounded-2xl border border-white/10">
-              {t(lang, "Dịch vụ du lịch ", "All-in-one travel services ")}<strong className="text-white">{t(lang, "TẤT CẢ TRONG MỘT", "ALL IN ONE")}</strong>{t(lang, " — Tour trong & ngoài nước, vé máy bay, dịch vụ visa và tổ chức sự kiện trọn gói.", " — Domestic & international tours, flights, visa services, and events.")}
-            </Motion.p>
-            
-            <Motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-4">
-              <Motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={openForm} 
-                className="bg-gradient-to-r from-[#1e64ae] to-[#77c14d] text-white font-extrabold px-10 py-4 rounded-2xl transition-all shadow-[0_10px_30px_rgba(30,100,174,0.4)] text-sm md:text-base tracking-wide uppercase"
-              >{t(lang, "ĐĂNG KÝ NGAY ĐỂ NHẬN ƯU ĐÃI", "REGISTER NOW FOR OFFERS")}</Motion.button>
-              <Motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => nav("lien-he")} 
-                className={`${glass} bg-white/10 text-white font-bold px-10 py-4 rounded-2xl transition-all text-sm md:text-base tracking-wide border-white/50 backdrop-blur-2xl hover:border-white shadow-xl`}
-              >{t(lang, "Nhận Tư Vấn", "Get Advice")}</Motion.button>
-            </Motion.div>
+            </p>
           </Motion.div>
         </div>
       </section>
 
-      {/* ── Search Bar / Filter ── */}
-      <section className="max-w-5xl mx-auto px-4 -mt-24 relative z-30 perspective-1000">
-        <Motion.div 
-          initial={{ opacity: 0, y: 50, rotateX: 20 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className={`${liquidGlass} rounded-[2rem] p-4 md:p-6`}
+      {/* ── External High-Contrast Animated Heading + Tour Search Card Overlapping Bottom Edge of Desktop Banner ── */}
+      <section className="max-w-5xl xl:max-w-6xl mx-auto px-4 -mt-14 sm:-mt-20 md:-mt-24 lg:-mt-28 xl:-mt-32 pb-2 relative z-30">
+        <div className="relative text-center mb-3 sm:mb-3.5 px-2">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-xl h-14 bg-[radial-gradient(ellipse_at_center,rgba(0,22,44,0.56)_0%,rgba(0,22,44,0.25)_55%,transparent_80%)] rounded-full blur-md -z-10"
+          />
+          <h1 className="headline-twinkle-wiggle text-[19px] min-[380px]:text-[22px] sm:text-2xl md:text-[27px] xl:text-[31px] font-black tracking-tight leading-tight text-balance bg-gradient-to-b from-[#FFF9C4] via-[#FFD54F] to-[#FF9800] bg-clip-text text-transparent">
+            {t(lang, "Tìm tour du lịch cùng Én Việt", "Find Your Travel Tour with Én Việt")}
+          </h1>
+        </div>
+
+        <Motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.1, ease: "easeOut" }}
+          className="rounded-[1.75rem] sm:rounded-[2rem] bg-white/95 backdrop-blur-2xl border border-white shadow-[0_22px_55px_-12px_rgba(0,59,92,0.18)] p-4 sm:p-5 lg:p-6 xl:px-7 xl:py-5"
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="group">
-              <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-widest block mb-2 pl-2">{t(lang, "Điểm Đến", "Destination")}</label>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 xl:gap-4">
+            <div className="group min-w-0">
+              <label className="text-[11px] font-black text-[#003B5C]/75 uppercase tracking-widest block mb-1.5 pl-1.5">
+                {t(lang, "Điểm Đến", "Destination")}
+              </label>
               <div className="relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors" />
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors pointer-events-none" />
                 <select
-                  className="w-full pl-12 pr-4 py-4 bg-white/80 hover:bg-white backdrop-blur-xl border border-white/80 rounded-2xl text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold appearance-none cursor-pointer transition-all shadow-sm group-hover:shadow-md"
-                  value={dest} onChange={(e) => setDest(e.target.value)}
+                  className="w-full min-w-0 pl-10 pr-9 py-3.5 bg-[#f8fbfd] hover:bg-white border border-gray-200/80 rounded-2xl text-[13px] sm:text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold appearance-none cursor-pointer transition-all shadow-sm group-hover:shadow-md truncate"
+                  value={dest}
+                  onChange={(e) => setDest(e.target.value)}
                 >
                   <option value="" className="text-gray-400">{t(lang, "Bạn muốn đi đâu?", "Where to?")}</option>
                   {["Việt Nam (Miền Bắc - Đà Lạt - Đà Nẵng - Miền Tây)", "Đài Loan", "Nhật Bản", "Dubai", "Bhutan", "Thổ Nhĩ Kỳ", "Tây Âu (Pháp - Thụy Sĩ - Ý)", "Đông Âu (Áo - Séc - Đức - Hungary)", "Nam Âu (Tây Ban Nha - Bồ Đào Nha - Maroc)"].map((d) => (
                     <option key={d} value={d} className="text-[#003B5C] font-semibold">{d}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#003B5C]/40 pointer-events-none" />
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#003B5C]/45 pointer-events-none" />
               </div>
             </div>
-            <div className="group">
-              <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-widest block mb-2 pl-2">{t(lang, "Loại Tour", "Tour Type")}</label>
+
+            <div className="group min-w-0">
+              <label className="text-[11px] font-black text-[#003B5C]/75 uppercase tracking-widest block mb-1.5 pl-1.5">
+                {t(lang, "Loại Tour", "Tour Type")}
+              </label>
               <div className="relative">
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors" />
+                <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors pointer-events-none" />
                 <select
-                  className="w-full pl-12 pr-4 py-4 bg-white/80 hover:bg-white backdrop-blur-xl border border-white/80 rounded-2xl text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold appearance-none cursor-pointer transition-all shadow-sm group-hover:shadow-md"
-                  value={type} onChange={(e) => setType(e.target.value)}
+                  className="w-full min-w-0 pl-10 pr-9 py-3.5 bg-[#f8fbfd] hover:bg-white border border-gray-200/80 rounded-2xl text-[13px] sm:text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold appearance-none cursor-pointer transition-all shadow-sm group-hover:shadow-md truncate"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
                 >
                   <option value="">{t(lang, "Tất cả loại tour", "All tour types")}</option>
                   <option>{t(lang, "Tour Châu Á", "Asia Tours")}</option>
@@ -605,37 +715,50 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
                   <option>Golf Trip</option>
                   <option>{t(lang, "Hành Hương Công Giáo", "Catholic Pilgrimage")}</option>
                 </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#003B5C]/40 pointer-events-none" />
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#003B5C]/45 pointer-events-none" />
               </div>
             </div>
-            <div className="group">
-              <label className="text-[11px] font-black text-[#003B5C]/70 uppercase tracking-widest block mb-2 pl-2">{t(lang, "Thời Gian", "Time")}</label>
+
+            <div className="group min-w-0">
+              <label className="text-[11px] font-black text-[#003B5C]/75 uppercase tracking-widest block mb-1.5 pl-1.5">
+                {t(lang, "Thời Gian", "Time")}
+              </label>
               <div className="relative">
-                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors" />
+                <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#00A651] group-focus-within:text-[#1e64ae] transition-colors pointer-events-none" />
                 <input
                   type="date"
-                  className="w-full pl-12 pr-4 py-4 bg-white/80 hover:bg-white backdrop-blur-xl border border-white/80 rounded-2xl text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold transition-all shadow-sm group-hover:shadow-md"
-                  value={date} onChange={(e) => setDate(e.target.value)}
+                  className="w-full min-w-0 pl-10 pr-3 py-3.5 bg-[#f8fbfd] hover:bg-white border border-gray-200/80 rounded-2xl text-[13px] sm:text-[14px] focus:outline-none focus:ring-4 focus:ring-[#00A651]/20 text-[#003B5C] font-bold transition-all shadow-sm group-hover:shadow-md"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                 />
               </div>
             </div>
-            <div className="flex items-end">
+
+            <div className="flex items-end min-w-0">
               <Motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => {
-                  if (type.includes("Hành Hương") || type.includes("Pilgrimage")) nav("tour-hanh-huong");
-                  else if (type.includes("Trong Nước") || dest.includes("Việt Nam")) nav("tour-trong-nuoc");
-                  else if (type.includes("Ngoài Nước") || dest) nav("tour-nuoc-ngoai");
-                  else nav("tour");
-                }}
-                className="w-full h-[54px] bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white font-black text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20 uppercase tracking-wide cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleSearchTours}
+                className="w-full h-[50px] bg-gradient-to-r from-[#1e64ae] to-[#77c14d] hover:brightness-110 text-white font-black text-sm rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20 uppercase tracking-wide whitespace-nowrap shrink-0 cursor-pointer px-5"
               >
-                <Search className="w-5 h-5" /> {t(lang, "Tìm Kiếm", "Search")}
+                <Search className="w-4.5 h-4.5 shrink-0" />
+                <span>{t(lang, "TÌM TOUR", "FIND TOURS")}</span>
               </Motion.button>
             </div>
           </div>
         </Motion.div>
+
+        {/* Secondary Consultation Link Below Search Bar */}
+        <div className="mt-3 flex justify-center">
+          <button
+            type="button"
+            onClick={() => nav("lien-he")}
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-[#1e64ae] hover:text-[#00A651] transition-colors underline underline-offset-4 decoration-[#1e64ae]/40 hover:decoration-[#00A651] cursor-pointer py-1 px-2"
+          >
+            <span>{t(lang, "Nhận tư vấn", "Get Consultation")}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </section>
 
       {/* ── CỤM 1: Tour Nổi Bật Nhất ── */}
@@ -684,6 +807,54 @@ function HomePage({ nav, openForm }: { nav: (p: Page) => void, openForm: () => v
           ))}
         </div>
       </section>
+
+      {/* ── Khối Gọn Chương Trình Quà Tặng (Khi Ưu Đãi Đang Hoạt Động) ── */}
+      {isPromoActive && (
+        <section className="max-w-7xl mx-auto px-4 my-10">
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="rounded-3xl bg-white border border-emerald-100/90 shadow-[0_14px_40px_-14px_rgba(30,100,174,0.14)] p-4 sm:p-5 md:p-6 flex flex-col md:flex-row items-center gap-5 md:gap-7"
+          >
+            <div
+              onClick={onOpenPromo}
+              className="w-full md:w-[320px] lg:w-[360px] shrink-0 rounded-2xl overflow-hidden border border-gray-100 shadow-sm cursor-pointer group"
+            >
+              <img
+                src={PromoImage}
+                alt={t(lang, "Chương trình quà tặng Én Việt", "Én Việt Gift Program")}
+                className="w-full aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-[#00A651] text-xs font-extrabold tracking-[0.18em] uppercase mb-1.5">
+                {t(lang, "ƯU ĐÃI ĐẶC BIỆT", "SPECIAL OFFER")}
+              </p>
+              <h3 className="text-xl sm:text-2xl font-black text-[#003B5C] tracking-tight mb-2">
+                {t(lang, "Chương trình quà tặng", "Gift Program")}
+              </h3>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed max-w-2xl mb-4">
+                {t(
+                  lang,
+                  "Nhận ngay bộ quà tặng du lịch chính hãng Én Việt khi đăng ký các hành trình trong và ngoài nước đang áp dụng ưu đãi.",
+                  "Receive exclusive Én Việt travel gifts when booking eligible domestic and international tour packages."
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={onOpenPromo}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[#1e64ae] to-[#00A651] hover:brightness-110 text-white font-black text-xs sm:text-sm uppercase tracking-wide shadow-md shadow-blue-900/15 transition-all cursor-pointer"
+              >
+                <span>{t(lang, "Xem quà tặng", "View Gifts")}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </Motion.div>
+        </section>
+      )}
 
       {/* ── CỤM 2: TREND TOUR ── */}
       <section className="max-w-7xl mx-auto px-4 my-16 overflow-visible">
@@ -978,6 +1149,11 @@ function AppContent() {
   const dismissCountRef = useRef(0);
   const isPromoOpenRef = useRef(false);
   const isFormOpenRef = useRef(false);
+  const unifiedRootRef = useRef<HTMLDivElement>(null);
+  const headerBarRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const backdropGradRef = useRef<HTMLDivElement>(null);
+  const backdropGlowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -1047,24 +1223,282 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const isUnifiedSubpage = isUnifiedSubpageRoute(page);
+
+  useLayoutEffect(() => {
+    if (!isUnifiedSubpage) return;
+    const rootEl = unifiedRootRef.current;
+    const barEl = headerBarRef.current;
+    const backdropEl = backdropRef.current;
+    const gradEl = backdropGradRef.current;
+    const glowEl = backdropGlowRef.current;
+    if (!rootEl || !barEl || !backdropEl || !gradEl || !glowEl) return;
+
+    let lastKey = "";
+    let observedHeroEnd: HTMLElement | null = null;
+
+    const syncBackdrop = () => {
+      const rootRect = rootEl.getBoundingClientRect();
+      const barRect = barEl.getBoundingClientRect();
+      const heroEndEl = rootEl.querySelector("[data-unified-hero-end]") as HTMLElement | null;
+
+      // Exact bottom of logo + menu tier (plus header pb-1 = 4px)
+      const menuBottom = Math.max(120, Math.round(barRect.bottom - rootRect.top) + 4);
+      const totalHeight = heroEndEl
+        ? Math.max(menuBottom + 64, Math.round(heroEndEl.getBoundingClientRect().bottom - rootRect.top))
+        : menuBottom + 36;
+
+      const key = `${menuBottom}:${totalHeight}:${heroEndEl ? 1 : 0}`;
+      if (key === lastKey) return;
+      lastKey = key;
+
+      backdropEl.style.height = `${totalHeight}px`;
+      glowEl.style.height = `${Math.max(110, menuBottom - 6)}px`;
+
+      let mask: string;
+      if (heroEndEl) {
+        const s0 = Math.max(0, menuBottom - 8);
+        const s1 = menuBottom + 4;
+        const s2 = menuBottom + 18;
+        const s3 = menuBottom + 32;
+        const s4 = Math.max(s3 + 16, totalHeight - 34);
+        mask = `linear-gradient(to bottom, rgba(0,0,0,1) 0px, rgba(0,0,0,1) ${s0}px, rgba(0,0,0,0.68) ${s1}px, rgba(0,0,0,0.28) ${s2}px, rgba(0,0,0,0.17) ${s3}px, rgba(0,0,0,0.10) ${s4}px, rgba(0,0,0,0) ${totalHeight}px)`;
+      } else {
+        const s0 = Math.max(0, menuBottom - 6);
+        const s1 = menuBottom + 10;
+        mask = `linear-gradient(to bottom, rgba(0,0,0,1) 0px, rgba(0,0,0,1) ${s0}px, rgba(0,0,0,0.45) ${s1}px, rgba(0,0,0,0) ${totalHeight}px)`;
+      }
+      gradEl.style.webkitMaskImage = mask;
+      gradEl.style.maskImage = mask;
+    };
+
+    const ro = new ResizeObserver(syncBackdrop);
+    ro.observe(rootEl);
+    ro.observe(barEl);
+
+    const attachHeroEnd = () => {
+      const nextHeroEnd = rootEl.querySelector("[data-unified-hero-end]") as HTMLElement | null;
+      if (nextHeroEnd !== observedHeroEnd) {
+        if (observedHeroEnd) ro.unobserve(observedHeroEnd);
+        observedHeroEnd = nextHeroEnd;
+        if (observedHeroEnd) ro.observe(observedHeroEnd);
+      }
+    };
+
+    attachHeroEnd();
+    syncBackdrop();
+
+    const mo = new MutationObserver(() => {
+      attachHeroEnd();
+      syncBackdrop();
+    });
+    mo.observe(rootEl, { childList: true, subtree: true });
+
+    window.addEventListener("resize", syncBackdrop);
+    return () => {
+      ro.disconnect();
+      mo.disconnect();
+      window.removeEventListener("resize", syncBackdrop);
+    };
+  }, [isUnifiedSubpage, page, thongTinTab]);
+
+  // Slow scroll-driven specular sheen across bottom colored banner boxes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    const rootEl = unifiedRootRef.current;
+    if (!rootEl) return;
+
+    type SheenState = {
+      el: HTMLElement;
+      current: number;
+      target: number;
+    };
+
+    const tracked = new Map<HTMLElement, SheenState>();
+    let rafId = 0;
+    let lastTime = 0;
+
+    const computeTarget = (el: HTMLElement): number => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 800;
+      const scrollY = window.scrollY;
+      const maxScrollY = Math.max(0, document.documentElement.scrollHeight - vh);
+      const docTop = rect.top + scrollY;
+
+      const enterY = Math.max(0, docTop - vh * 0.96);
+      const rawExitY = docTop - vh * 0.12;
+      const exitY = Math.min(maxScrollY, Math.max(enterY + 140, rawExitY));
+      const span = Math.max(1, exitY - enterY);
+
+      return Math.min(1, Math.max(0, (scrollY - enterY) / span));
+    };
+
+    const applyProgress = (el: HTMLElement, p: number) => {
+      const xPct = -115 + p * 230;
+      el.style.setProperty("--sheen-x", `${xPct.toFixed(2)}%`);
+    };
+
+    const tick = (now: number) => {
+      const dt = lastTime ? Math.min(0.05, (now - lastTime) / 1000) : 0.016;
+      lastTime = now;
+      // Gentle, deliberately slow damping so the sheen glides calmly (~2.5s settle)
+      const alpha = 1 - Math.exp(-1.45 * dt);
+      let needsMore = false;
+
+      tracked.forEach((state, el) => {
+        if (!el.isConnected) {
+          tracked.delete(el);
+          return;
+        }
+        const diff = state.target - state.current;
+        if (Math.abs(diff) > 0.0008) {
+          state.current += diff * alpha;
+          applyProgress(el, state.current);
+          needsMore = true;
+        } else if (state.current !== state.target) {
+          state.current = state.target;
+          applyProgress(el, state.current);
+        }
+      });
+
+      if (needsMore) {
+        rafId = window.requestAnimationFrame(tick);
+      } else {
+        rafId = 0;
+        lastTime = 0;
+      }
+    };
+
+    const startLoop = () => {
+      if (!rafId) {
+        lastTime = 0;
+        rafId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    const refreshTargets = () => {
+      let anyMoved = false;
+      tracked.forEach((state, el) => {
+        if (!el.isConnected) {
+          tracked.delete(el);
+          return;
+        }
+        const nextTarget = computeTarget(el);
+        if (Math.abs(nextTarget - state.target) > 0.0008) {
+          state.target = nextTarget;
+          anyMoved = true;
+        }
+      });
+      if (anyMoved) startLoop();
+    };
+
+    const scanElements = () => {
+      const nodes = rootEl.querySelectorAll<HTMLElement>(".colored-banner-sheen");
+      const activeSet = new Set<HTMLElement>();
+      nodes.forEach((el) => {
+        activeSet.add(el);
+        if (!tracked.has(el)) {
+          const initTarget = computeTarget(el);
+          tracked.set(el, { el, current: initTarget, target: initTarget });
+          applyProgress(el, initTarget);
+        }
+      });
+      tracked.forEach((_, el) => {
+        if (!activeSet.has(el)) tracked.delete(el);
+      });
+    };
+
+    scanElements();
+
+    const onScrollOrResize = () => refreshTargets();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
+
+    const ro = new ResizeObserver(refreshTargets);
+    ro.observe(rootEl);
+
+    const mo = new MutationObserver(() => {
+      scanElements();
+      refreshTargets();
+    });
+    mo.observe(rootEl, { childList: true, subtree: true });
+
+    return () => {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+      ro.disconnect();
+      mo.disconnect();
+    };
+  }, [page, thongTinTab, visaTab]);
+
+  const isPromoActive = dismissCount < 3;
+  const pageSurfaceClass = page.startsWith("tour")
+    ? "bg-gradient-to-b from-[#f0f6fa] via-[#f7fbf9] to-[#ffffff]"
+    : page === "ve-may-bay"
+      ? "bg-gradient-to-br from-[#f0f7fa] via-[#ffffff] to-[#eef7f2]"
+      : page === "thong-tin"
+        ? "bg-white"
+        : "bg-[#f8fcfb]";
+
   return (
-    <div className="min-h-screen font-sans selection:bg-[#00A651] selection:text-white bg-[#f8fcfb]">
-      <Header current={page} nav={navigateTo} />
-      
-      {page === "home" && <HomePage nav={navigateTo} openForm={() => setIsFormOpen(true)} />}
-      {page === "gioi-thieu" && <GioiThieuPage />}
-      {page.startsWith("tour") && <TourPage category={page} openForm={() => setIsFormOpen(true)} />}
-      {page === "golf" && <GolfPage />}
-      {page === "ve-may-bay" && <VeMayBayPage openForm={() => setIsFormOpen(true)} />}
-      {page === "visa" && <VisaPage defaultTab={visaTab} />}
-      {page === "thong-tin" && <ThongTinPage defaultTab={thongTinTab} />}
-      {page === "thu-vien-anh" && <ThuVienAnhPage nav={navigateTo} />}
-      {page === "lien-he" && <LienHePage />}
+    <div className={`min-h-screen font-sans selection:bg-[#00A651] selection:text-white overflow-x-clip ${pageSurfaceClass}`}>
+      <div ref={unifiedRootRef} className="relative">
+        {/* Single continuous gradient canvas shared across logo, menu bar, and title/description */}
+        {isUnifiedSubpage && (
+          <div
+            ref={backdropRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 z-0 overflow-hidden"
+            style={{ height: "340px" }}
+          >
+            <div
+              ref={backdropGradRef}
+              className="absolute inset-0 bg-gradient-to-r from-[#1e64ae] via-[#00A651] to-[#77c14d]"
+            />
+            <div
+              ref={backdropGlowRef}
+              className="pointer-events-none absolute inset-x-0 top-0 overflow-hidden"
+              style={{
+                height: "184px",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, black 0%, black 58%, transparent 96%)",
+                maskImage:
+                  "linear-gradient(to bottom, black 0%, black 58%, transparent 96%)",
+              }}
+            >
+              <div className="absolute top-[-50px] md:top-[-80px] left-1/2 -translate-x-1/2 w-[140vw] md:w-[115vw] h-[200px] md:h-[250px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,1)_0%,_rgba(255,255,255,0.9)_30%,_rgba(255,255,255,0)_70%)] blur-md" />
+              <div className="absolute top-[-20px] left-1/2 -translate-x-1/2 w-[80vw] h-[150px] bg-white opacity-80 blur-3xl rounded-full" />
+            </div>
+          </div>
+        )}
+
+        <Header current={page} nav={navigateTo} headerBarRef={headerBarRef} />
+        
+        {page === "home" && (
+          <HomePage
+            nav={navigateTo}
+            openForm={() => setIsFormOpen(true)}
+            isPromoActive={isPromoActive}
+            onOpenPromo={() => setIsPromoOpen(true)}
+          />
+        )}
+        {page === "gioi-thieu" && <GioiThieuPage />}
+        {page.startsWith("tour") && <TourPage category={page} openForm={() => setIsFormOpen(true)} />}
+        {page === "golf" && <GolfPage />}
+        {page === "ve-may-bay" && <VeMayBayPage openForm={() => setIsFormOpen(true)} />}
+        {page === "visa" && <VisaPage defaultTab={visaTab} />}
+        {page === "thong-tin" && <ThongTinPage defaultTab={thongTinTab} />}
+        {page === "thu-vien-anh" && <ThuVienAnhPage nav={navigateTo} />}
+        {page === "lien-he" && <LienHePage />}
+      </div>
       
       
       
       {/* Contact FAB */}
-      <div className="fixed bottom-6 right-6 z-[70] flex flex-col items-end gap-3">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[70] flex flex-col items-end gap-3">
         <AnimatePresence>
           {isContactOpen && (
             <Motion.div 
@@ -1093,9 +1527,9 @@ function AppContent() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsContactOpen(!isContactOpen)}
-          className="w-14 h-14 bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,166,81,0.4)] relative"
+          className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-[#1e64ae] to-[#00A651] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,166,81,0.4)] relative"
         >
-          {isContactOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+          {isContactOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />}
           
           {/* Pulse effect */}
           {!isContactOpen && (
@@ -1105,15 +1539,15 @@ function AppContent() {
       </div>
 
       {/* Floating Socials */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-[60] p-2">
-        <a href="https://www.facebook.com/dulichsukienenviet" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
-          <Facebook className="w-5 h-5" />
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 flex flex-col gap-2.5 sm:gap-3 z-[60] p-1 sm:p-2">
+        <a href="https://www.facebook.com/dulichsukienenviet" target="_blank" rel="noopener noreferrer" className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
+          <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />
         </a>
-        <a href="https://www.tiktok.com/@envietofficial" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gradient-to-br from-black to-gray-800 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
-          <Music2 className="w-5 h-5" />
+        <a href="https://www.tiktok.com/@envietofficial" target="_blank" rel="noopener noreferrer" className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-black to-gray-800 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
+          <Music2 className="w-4 h-4 sm:w-5 sm:h-5" />
         </a>
-        <a href="https://www.youtube.com/@DuL%E1%BB%8Bch%C3%89nVi%E1%BB%87t" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
-          <Youtube className="w-5 h-5" />
+        <a href="https://www.youtube.com/@DuL%E1%BB%8Bch%C3%89nVi%E1%BB%87t" target="_blank" rel="noopener noreferrer" className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-500 to-red-700 text-white rounded-l-xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.5)] hover:w-12 hover:-translate-x-1 transition-all duration-300">
+          <Youtube className="w-4 h-4 sm:w-5 sm:h-5" />
         </a>
       </div>
 

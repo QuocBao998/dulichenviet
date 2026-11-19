@@ -306,7 +306,7 @@ export function GioiThieuPage() {
   ];
 
   return (
-    <div className="pt-12 pb-24 min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#ffffff] to-[#e8f5e9]">
+    <div className="pt-12 min-h-screen bg-gradient-to-br from-[#e0f7fa] via-[#ffffff] to-[#e8f5e9]">
       <div className="max-w-7xl mx-auto px-4">
         {/* ── Page Header ── */}
         <Motion.div

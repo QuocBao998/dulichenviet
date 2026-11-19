@@ -284,86 +284,79 @@ export const LiquidTourCard = React.forwardRef<HTMLDivElement, LiquidTourCardPro
 
         {/* Price & Arrow Action Button */}
         {featuredHighlight && !isContact ? (
-          <div className="relative pt-3 mt-1">
-            <div className="relative flex items-center justify-between gap-2">
-              {/* Red Brush-Stroke Ribbon Price Container (with rhythmic heartbeat pulse) */}
-              <div className="relative flex-1 min-w-0 -ml-3 transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.04] origin-left">
-                <div
-                  className="brush-beat relative px-3.5 sm:px-4 py-3 pr-5 select-none"
-                  style={{ animationDelay: `${(index % 4) * 0.45}s` }}
-                >
-                  {/* Organic Vector Brush-Stroke Background */}
-                  <svg
+          <div className="relative pt-3 mt-1 border-t border-gray-100/90">
+            <div className="transition-transform duration-300 ease-out group-hover:-translate-y-0.5">
+              <div
+                className="group/redbox featured-price-capsule relative"
+                style={{ animationDelay: `${(index % 4) * 0.55}s` }}
+              >
+                <div className="featured-ticket-mask relative overflow-hidden bg-gradient-to-r from-[#8E0C17] via-[#D92027] to-[#F34822] py-3 pl-4 pr-3.5 sm:py-3.5 sm:pl-4.5 sm:pr-4">
+                  {/* Subtle inner ticket border frame */}
+                  <div
                     aria-hidden="true"
-                    viewBox="0 0 280 88"
-                    preserveAspectRatio="none"
-                    className="pointer-events-none absolute inset-0 w-full h-full overflow-visible"
-                  >
-                    <defs>
-                      <linearGradient id={`brushGrad-${index}`} x1="0%" y1="0%" x2="100%" y2="15%">
-                        <stop offset="0%" stopColor="#9E140B" />
-                        <stop offset="48%" stopColor="#DC2626" />
-                        <stop offset="100%" stopColor="#F0381F" />
-                      </linearGradient>
-                    </defs>
-                    {/* Main brush stroke body with frayed bristle edges */}
-                    <path
-                      d="M14,14 C55,8 128,4 205,7 C242,8 265,6 277,11 L268,18 L279,22 L266,31 L276,40 L264,49 L274,59 L261,66 L270,74 C232,78 164,82 95,79 C52,77 24,82 4,76 L15,67 L2,60 L14,50 L4,41 L16,33 L6,25 L17,19 Z"
-                      fill={`url(#brushGrad-${index})`}
-                    />
-                    {/* Subtle warm vermilion dry-brush accent highlight */}
-                    <path
-                      d="M28,20 C88,14 166,12 246,15 C255,15 262,17 255,21 C182,19 98,21 32,26 C24,26 22,21 28,20 Z"
-                      fill="#FF7A59"
-                      opacity="0.28"
-                    />
-                  </svg>
+                    className="pointer-events-none absolute inset-y-[4px] inset-x-[11px] border border-white/20"
+                  />
+                  {/* Top specular glass highlight edge */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/65 to-transparent"
+                  />
+                  {/* Soft ambient inner corner glow */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-6 -right-4 w-24 h-24 rounded-full bg-amber-300/25 blur-xl"
+                  />
+                  {/* Diagonal traveling sheen across the red gradient */}
+                  <div
+                    aria-hidden="true"
+                    className="featured-price-shimmer pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    style={{ animationDelay: `${(index % 4) * 0.6}s` }}
+                  />
 
-                  {/* Text Content Inside Brush Ribbon */}
-                  <div className="relative z-10 flex flex-col">
-                    {/* Top line: GIÁ TỪ + subtle crossed-out reference price on hover */}
-                    <div className="flex items-center gap-2 mb-1 pl-0.5">
-                      <span className="text-[10px] font-black text-white/95 uppercase tracking-wider leading-none drop-shadow-sm">
-                        {t(lang, "GIÁ TỪ", "FROM")}
-                      </span>
-                      {originalPriceFormatted && (
-                        <span className="text-[10px] font-bold text-white/80 line-through decoration-white/90 decoration-[1.5px] tabular-nums opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 leading-none">
-                          {originalPriceFormatted}
+                  <div className="relative z-10 flex items-center justify-between gap-2">
+                    {/* Price Content */}
+                    <div className="min-w-0 flex-1 flex flex-col">
+                      <div className="flex items-center mb-1">
+                        <span className="h-1.5 rounded-full bg-[#FFE066] shadow-[0_0_8px_rgba(255,224,102,0.95)] shrink-0 w-0 opacity-0 scale-0 mr-0 group-hover/redbox:w-1.5 group-hover/redbox:opacity-100 group-hover/redbox:scale-100 group-hover/redbox:mr-1.5 transition-all duration-300" />
+                        <span className="text-[10px] font-extrabold text-rose-50/95 uppercase tracking-[0.12em] leading-none">
+                          {t(lang, "GIÁ TỪ", "FROM")}
                         </span>
-                      )}
+                        {originalPriceFormatted && (
+                          <span className="ml-1.5 text-[10px] font-bold text-white/75 line-through decoration-white/85 decoration-[1.5px] tabular-nums leading-none truncate">
+                            {originalPriceFormatted}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Oversized Yellow-Orange Gradient Price Digits + VNĐ */}
+                      <div className="inline-flex items-baseline gap-1 whitespace-nowrap">
+                        <span className="text-[21px] sm:text-[23px] lg:text-[17px] xl:text-[22px] 2xl:text-[25px] font-black tracking-[-0.03em] tabular-nums leading-none bg-gradient-to-b from-[#FFF9C4] via-[#FFD039] to-[#FF7A00] bg-clip-text text-transparent drop-shadow-[0_2px_3px_rgba(88,8,6,0.72)]">
+                          {tour.priceFormatted.replace(/\s*VNĐ$/i, "").trim()}
+                        </span>
+                        <span className="text-[10px] lg:text-[9px] xl:text-[11px] font-black tracking-wide leading-none bg-gradient-to-b from-[#FFF9C4] via-[#FFD039] to-[#FF8800] bg-clip-text text-transparent drop-shadow-[0_1.5px_2px_rgba(88,8,6,0.72)]">
+                          VNĐ
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Swaying Oversized Yellow-Orange Gradient Price Digits + VNĐ */}
-                    <div
-                      className="price-gentle-sway items-baseline gap-1 whitespace-nowrap"
-                      style={{ animationDelay: `${(index % 4) * 0.45}s` }}
+                    {/* Cleanly Nested White-Gold Arrow CTA */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelect(tour);
+                      }}
+                      aria-label="Xem chi tiết"
+                      className="w-8 h-8 xl:w-9 xl:h-9 rounded-xl bg-white/95 text-[#C91822] group-hover:bg-[#FFE066] group-hover:text-[#7D0A14] flex items-center justify-center transition-all duration-300 shadow-[0_6px_14px_rgba(90,8,10,0.28)] group-hover:scale-105 shrink-0 cursor-pointer"
                     >
-                      <span className="text-[28px] sm:text-[30px] lg:text-[23px] xl:text-[29px] font-black tracking-[-0.03em] tabular-nums leading-[0.95] bg-gradient-to-b from-[#FFF7AD] via-[#FFC82B] to-[#FF6A00] bg-clip-text text-transparent drop-shadow-[0_2px_3px_rgba(95,10,5,0.85)]">
-                        {tour.priceFormatted.replace(/\s*VNĐ$/i, "").trim()}
-                      </span>
-                      <span className="text-[11px] lg:text-[10px] xl:text-xs font-black tracking-wide leading-none bg-gradient-to-b from-[#FFF7AD] via-[#FFC82B] to-[#FF7B00] bg-clip-text text-transparent drop-shadow-[0_1.5px_2px_rgba(95,10,5,0.8)]">
-                        VNĐ
-                      </span>
-                    </div>
+                      <ArrowRight className="w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </div>
-
-              {/* Frosted Glass Sky-Blue Arrow CTA (matching reference screenshot 2) */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect(tour);
-                }}
-                aria-label="Xem chi tiết"
-                className="relative z-20 -ml-2.5 w-10 h-10 xl:w-11 xl:h-11 rounded-2xl bg-[#EBF5FF]/95 backdrop-blur-md border border-white text-[#1e64ae] group-hover:bg-gradient-to-r group-hover:from-[#1e64ae] group-hover:to-[#00A651] group-hover:text-white group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-[0_8px_20px_rgba(30,100,174,0.18)] group-hover:scale-105 shrink-0 cursor-pointer"
-              >
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-              </button>
             </div>
 
             {tour.priceNote && (
-              <div className="text-[11px] text-gray-500 font-medium mt-1.5 line-clamp-1" title={tour.priceNote}>
+              <div className="text-[11px] text-gray-500 font-medium mt-2 line-clamp-1" title={tour.priceNote}>
                 {tour.priceNote}
               </div>
             )}

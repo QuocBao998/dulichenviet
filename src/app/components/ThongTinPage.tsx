@@ -313,7 +313,7 @@ export function ThongTinPage({ defaultTab = "Tất cả" }: { defaultTab?: strin
 
   if (selected) {
     return (
-      <div className="pt-4 pb-24 min-h-screen bg-white">
+      <div className="relative z-10 pt-4 pb-24 min-h-screen bg-transparent">
         <ArticleDetail
           post={selected}
           onBack={() => {
@@ -326,23 +326,23 @@ export function ThongTinPage({ defaultTab = "Tất cả" }: { defaultTab?: strin
   }
 
   return (
-    <div className="pb-24 min-h-screen bg-white">
-      {/* Page header */}
-      <div className="bg-gradient-to-br from-[#003B5C] to-[#1e64ae] py-12 px-4 mb-10">
+    <div className="relative z-10 pb-24 min-h-screen bg-transparent">
+      {/* Page header sharing unified continuous backdrop */}
+      <div data-unified-hero-end className="py-10 md:py-12 px-4 mb-10">
         <div className="max-w-7xl mx-auto text-center">
           <Motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-black text-white mb-3 tracking-tight"
+            initial={{ opacity: 0.92 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="text-3xl md:text-5xl font-black text-[#003B5C] mb-3 tracking-tight"
           >
             Thông Tin Du Lịch
           </Motion.h1>
           <Motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-blue-200 text-base md:text-lg max-w-xl mx-auto"
+            initial={{ opacity: 0.92 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="text-[#134E6F] text-base md:text-lg max-w-xl mx-auto font-medium"
           >
             Tin tức mới nhất, cẩm nang và kinh nghiệm du lịch từ EnViet Tour
           </Motion.p>

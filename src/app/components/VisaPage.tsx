@@ -570,44 +570,37 @@ function HeroBanner() {
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/25 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-      <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 max-w-2xl">
-        <AnimatePresence mode="wait">
-          <Motion.div
-            key={current}
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-3 md:mb-4">
-              <Globe className="w-3.5 h-3.5" /> {BANNERS[current].sub}
-            </span>
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-2 md:mb-3 drop-shadow-2xl">
-              {BANNERS[current].heading}
-            </h1>
-            <p className="text-white/85 text-xs md:text-base mb-4 md:mb-6 drop-shadow hidden sm:block">
-              {BANNERS[current].desc}
-            </p>
-            <div className="hidden sm:flex flex-wrap gap-2">
-              {["Tư vấn miễn phí", "Xử lý nhanh 24h", "Cam kết hoàn phí"].map((t) => (
-                <span key={t} className="flex items-center gap-1.5 bg-white/15 border border-white/25 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm">
-                  <CheckCircle className="w-3 h-3 text-[#7fe8c4]" /> {t}
+      <div className="absolute inset-0 flex items-center">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 pb-8 md:pb-12">
+          <div className="max-w-2xl">
+            <AnimatePresence mode="wait">
+              <Motion.div
+                key={current}
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-3 md:mb-4">
+                  <Globe className="w-3.5 h-3.5" /> {BANNERS[current].sub}
                 </span>
-              ))}
-            </div>
-          </Motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {BANNERS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`rounded-full transition-all duration-500 ${i === current ? "w-6 h-2 bg-white" : "w-2 h-2 bg-white/50 hover:bg-white/80"}`}
-          />
-        ))}
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-2 md:mb-3 drop-shadow-2xl">
+                  {BANNERS[current].heading}
+                </h1>
+                <p className="text-white/85 text-xs md:text-base mb-4 md:mb-6 drop-shadow hidden sm:block">
+                  {BANNERS[current].desc}
+                </p>
+                <div className="hidden sm:flex flex-wrap gap-2">
+                  {["Tư vấn miễn phí", "Xử lý nhanh 24h", "Cam kết hoàn phí"].map((t) => (
+                    <span key={t} className="flex items-center gap-1.5 bg-white/15 border border-white/25 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm">
+                      <CheckCircle className="w-3 h-3 text-[#7fe8c4]" /> {t}
+                    </span>
+                  ))}
+                </div>
+              </Motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
 
       {/* Arrows */}
@@ -650,27 +643,29 @@ export function VisaPage({ defaultTab = "Tư vấn Visa" }: { defaultTab?: strin
       <HeroBanner />
 
       {/* Service cards */}
-      <div className="max-w-5xl mx-auto px-6 -mt-6 mb-12 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 md:-mt-14 mb-14 relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 items-stretch">
           {SERVICE_CARDS.map((c, i) => (
             <Motion.div
               key={c.region}
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="h-full bg-white rounded-2xl p-5 sm:p-6 shadow-[0_14px_34px_-12px_rgba(0,59,92,0.14)] border border-gray-100 hover:shadow-[0_18px_40px_-12px_rgba(30,100,174,0.2)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between"
             >
-              <span className="text-2xl mb-3 block">{c.flag}</span>
-              <p className="font-bold text-[#003B5C] text-sm mb-1">{c.region}</p>
-              <p className="text-xs text-gray-400 leading-relaxed mb-3">{c.examples}</p>
-              <p className="text-[#00A651] font-black text-sm">{c.price}</p>
+              <div>
+                <span className="text-2xl mb-3 block">{c.flag}</span>
+                <p className="font-bold text-[#003B5C] text-sm sm:text-[15px] mb-1.5">{c.region}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{c.examples}</p>
+              </div>
+              <p className="text-[#00A651] font-black text-sm mt-4 pt-3 border-t border-gray-100">{c.price}</p>
             </Motion.div>
           ))}
         </div>
       </div>
 
       {/* Blog section */}
-      <div className="max-w-5xl mx-auto px-6 pb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
 
         {/* Header + tabs */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
@@ -798,7 +793,7 @@ export function VisaPage({ defaultTab = "Tư vấn Visa" }: { defaultTab?: strin
         </div>
 
         {/* Why us */}
-        <div className="mt-20 bg-gradient-to-r from-[#002d47] to-[#004b7a] rounded-3xl p-8 md:p-12 text-white">
+        <div className="mt-20 bg-gradient-to-r from-[#002d47] to-[#004b7a] rounded-3xl p-8 md:p-12 text-white colored-banner-sheen">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div>
               <p className="text-[#7fe8c4] text-xs font-bold uppercase tracking-widest mb-2">Cam kết của Én Việt</p>

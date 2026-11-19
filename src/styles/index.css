@@ -34,59 +34,139 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
-/* ── Featured Tour Brush-Stroke Beat & Gentle Price Sway ── */
-@keyframes brushBeatPulse {
-  0%, 52%, 100% {
-    transform: scale(1) rotate(-1.5deg);
-    filter: drop-shadow(0 8px 16px rgba(220, 38, 38, 0.24));
+/* ── Featured Tour Crimson Glass Price Capsule: Twinkle + Wiggle + Shimmer + Ticket Corners ── */
+@keyframes featuredCapsuleTwinkleWiggle {
+  0%, 56%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    filter: brightness(1) drop-shadow(0 8px 14px rgba(220, 38, 38, 0.34));
   }
-  14% {
-    transform: scale(1.036) rotate(-1.1deg);
-    filter: drop-shadow(0 12px 24px rgba(239, 43, 29, 0.42));
+  10% {
+    transform: translateY(-2px) rotate(-1.2deg) scale(1.022);
+    filter: brightness(1.16) drop-shadow(0 12px 20px rgba(239, 68, 68, 0.56)) drop-shadow(0 0 10px rgba(255, 210, 63, 0.38));
   }
-  26% {
-    transform: scale(0.995) rotate(-1.6deg);
-    filter: drop-shadow(0 8px 16px rgba(220, 38, 38, 0.24));
+  20% {
+    transform: translateY(0px) rotate(1.1deg) scale(1.012);
+    filter: brightness(0.96) drop-shadow(0 8px 14px rgba(220, 38, 38, 0.36));
   }
-  36% {
-    transform: scale(1.022) rotate(-1.3deg);
-    filter: drop-shadow(0 10px 20px rgba(239, 43, 29, 0.34));
+  30% {
+    transform: translateY(-1.5px) rotate(-0.9deg) scale(1.018);
+    filter: brightness(1.18) drop-shadow(0 12px 22px rgba(239, 68, 68, 0.58)) drop-shadow(0 0 12px rgba(255, 224, 102, 0.42));
   }
-}
-
-@keyframes priceGentleSway {
-  0%, 54%, 100% {
-    transform: rotate(0deg) translateY(0px);
-  }
-  12% {
-    transform: rotate(-2deg) translateY(-1.5px);
-  }
-  24% {
-    transform: rotate(1.7deg) translateY(0px);
-  }
-  36% {
-    transform: rotate(-1.1deg) translateY(-0.5px);
-  }
-  46% {
-    transform: rotate(0.6deg) translateY(0px);
+  42% {
+    transform: translateY(0px) rotate(0.5deg) scale(1.004);
+    filter: brightness(1) drop-shadow(0 8px 14px rgba(220, 38, 38, 0.34));
   }
 }
 
-.brush-beat {
-  animation: brushBeatPulse 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+@keyframes featuredPriceShimmer {
+  0%, 58% {
+    transform: translate3d(-130%, 0, 0) skewX(-22deg);
+    opacity: 0;
+  }
+  65% {
+    opacity: 1;
+  }
+  92% {
+    transform: translate3d(230%, 0, 0) skewX(-22deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(230%, 0, 0) skewX(-22deg);
+    opacity: 0;
+  }
+}
+
+.featured-price-capsule {
+  animation: featuredCapsuleTwinkleWiggle 3.1s ease-in-out infinite;
+  transform-origin: center center;
+  will-change: transform, filter;
+}
+
+.featured-ticket-mask {
+  -webkit-mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 88' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0,0 L0,5.6 A2.4,2.4 0 0 1 0,10.4 L0,14.1 A2.4,2.4 0 0 1 0,18.9 L0,22.6 A2.4,2.4 0 0 1 0,27.4 L0,35 A9,9 0 0 1 0,53 L0,60.6 A2.4,2.4 0 0 1 0,65.4 L0,69.1 A2.4,2.4 0 0 1 0,73.9 L0,77.6 A2.4,2.4 0 0 1 0,82.4 L0,88 L12,88 L12,0 Z'/%3E%3C/svg%3E"),
+    linear-gradient(black, black),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 88' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0,0 L12,0 L12,5.6 A2.4,2.4 0 0 0 12,10.4 L12,14.1 A2.4,2.4 0 0 0 12,18.9 L12,22.6 A2.4,2.4 0 0 0 12,27.4 L12,35 A9,9 0 0 0 12,53 L12,60.6 A2.4,2.4 0 0 0 12,65.4 L12,69.1 A2.4,2.4 0 0 0 12,73.9 L12,77.6 A2.4,2.4 0 0 0 12,82.4 L12,88 L0,88 Z'/%3E%3C/svg%3E");
+  mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 88' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0,0 L0,5.6 A2.4,2.4 0 0 1 0,10.4 L0,14.1 A2.4,2.4 0 0 1 0,18.9 L0,22.6 A2.4,2.4 0 0 1 0,27.4 L0,35 A9,9 0 0 1 0,53 L0,60.6 A2.4,2.4 0 0 1 0,65.4 L0,69.1 A2.4,2.4 0 0 1 0,73.9 L0,77.6 A2.4,2.4 0 0 1 0,82.4 L0,88 L12,88 L12,0 Z'/%3E%3C/svg%3E"),
+    linear-gradient(black, black),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 88' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M0,0 L12,0 L12,5.6 A2.4,2.4 0 0 0 12,10.4 L12,14.1 A2.4,2.4 0 0 0 12,18.9 L12,22.6 A2.4,2.4 0 0 0 12,27.4 L12,35 A9,9 0 0 0 12,53 L12,60.6 A2.4,2.4 0 0 0 12,65.4 L12,69.1 A2.4,2.4 0 0 0 12,73.9 L12,77.6 A2.4,2.4 0 0 0 12,82.4 L12,88 L0,88 Z'/%3E%3C/svg%3E");
+  -webkit-mask-position: left top, 11px top, right top;
+  mask-position: left top, 11px top, right top;
+  -webkit-mask-size: 12px 100%, calc(100% - 22px) 100%, 12px 100%;
+  mask-size: 12px 100%, calc(100% - 22px) 100%, 12px 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.featured-price-shimmer {
+  animation: featuredPriceShimmer 4.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes headlineTwinkleWiggle {
+  0%, 58%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    filter: drop-shadow(0 3px 10px rgba(0, 15, 35, 0.82)) brightness(1);
+  }
+  10% {
+    transform: translateY(-2px) rotate(-1.4deg) scale(1.025);
+    filter: drop-shadow(0 0 16px rgba(255, 224, 102, 0.9)) brightness(1.18);
+  }
+  20% {
+    transform: translateY(0px) rotate(1.3deg) scale(1.015);
+    filter: drop-shadow(0 3px 10px rgba(0, 15, 35, 0.8)) brightness(0.95);
+  }
+  30% {
+    transform: translateY(-1.5px) rotate(-1deg) scale(1.02);
+    filter: drop-shadow(0 0 18px rgba(255, 210, 63, 0.92)) brightness(1.2);
+  }
+  42% {
+    transform: translateY(0px) rotate(0.6deg) scale(1.005);
+    filter: drop-shadow(0 3px 10px rgba(0, 15, 35, 0.82)) brightness(1);
+  }
+}
+
+.headline-twinkle-wiggle {
+  display: inline-block;
+  animation: headlineTwinkleWiggle 3.1s ease-in-out infinite;
   transform-origin: center center;
 }
 
-.price-gentle-sway {
-  display: inline-flex;
-  animation: priceGentleSway 2.8s ease-in-out infinite;
-  transform-origin: center center;
+/* ── Bottom Colored Banner Scroll-Driven Specular Sheen ── */
+.colored-banner-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.colored-banner-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.04) 34%,
+    rgba(255, 255, 255, 0.24) 50%,
+    rgba(255, 255, 255, 0.04) 66%,
+    transparent 80%
+  );
+  transform: translate3d(var(--sheen-x, -115%), 0, 0);
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brush-beat,
-  .price-gentle-sway {
+  .featured-price-capsule,
+  .featured-price-shimmer,
+  .headline-twinkle-wiggle {
     animation: none;
+  }
+
+  .colored-banner-sheen::after {
+    display: none;
   }
 }
 

@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { motion as Motion } from "motion/react";
 import {
   Plane, ArrowRight, ChevronLeft, Calendar, Tag, Phone,
-  Search, CheckCircle, Sparkles, FileText
+  Search, CheckCircle, FileText
 } from "lucide-react";
 import { useLang, t } from "../App";
 
@@ -298,7 +298,7 @@ export function VeMayBayPage({ openForm }: { openForm?: () => void }) {
 
   if (activePost) {
     return (
-      <div className="pt-10 pb-24 min-h-screen bg-gradient-to-br from-[#f0f7fa] via-white to-[#eef7f2]">
+      <div className="relative z-10 pt-10 pb-24 min-h-screen bg-transparent">
         <div className="max-w-4xl mx-auto px-4">
           <button
             onClick={() => {
@@ -429,26 +429,19 @@ export function VeMayBayPage({ openForm }: { openForm?: () => void }) {
   }
 
   return (
-    <div className="pb-24 min-h-screen bg-gradient-to-br from-[#f0f7fa] via-[#ffffff] to-[#eef7f2]">
-      {/* ── Page Hero Header ── */}
-      <div className="relative pt-12 pb-14 px-4 overflow-hidden bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651]">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-12 left-12 w-72 h-72 bg-[#00E676]/20 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+    <div className="relative z-10 pb-24 min-h-screen bg-transparent">
+      {/* ── Page Hero Header sharing unified continuous backdrop ── */}
+      <div data-unified-hero-end className="pt-11 pb-13 md:pt-12 md:pb-14 px-4">
+        <div className="max-w-7xl mx-auto text-center">
           <Motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0.92 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold uppercase tracking-widest mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-[#00E676]" />
-              <span>{t(lang, "Tổng Đại Lý Vé Máy Bay Én Việt", "Én Việt Official Airline Agency")}</span>
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">
+            <h1 className="text-3xl md:text-5xl font-black text-[#003B5C] tracking-tight mb-4">
               {t(lang, "Vé Máy Bay – Tin Tức & Ưu Đãi Hàng Không", "Flight Tickets – Airline News & Deals")}
             </h1>
-            <p className="text-white/85 max-w-2xl mx-auto text-sm md:text-base font-medium">
+            <p className="text-[#134E6F] max-w-2xl mx-auto text-sm md:text-base font-medium">
               {t(
                 lang,
                 "Cập nhật liên tục đường bay mới, vé khuyến mãi 0Đ, quy định giấy tờ hàng không và sơ đồ khai thác tại sân bay Tân Sơn Nhất.",
@@ -576,7 +569,7 @@ export function VeMayBayPage({ openForm }: { openForm?: () => void }) {
         )}
 
         {/* ── Direct Ticket Consultation Banner ── */}
-        <div className="mt-14 rounded-[2rem] bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651] p-7 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mt-14 rounded-[2rem] bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651] p-7 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 colored-banner-sheen">
           <div className="space-y-2 text-center md:text-left">
             <div className="text-xs font-black uppercase tracking-widest text-[#00E676]">
               Hỗ Trợ Đặt Vé Nội Địa & Quốc Tế 24/7

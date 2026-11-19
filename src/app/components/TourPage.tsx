@@ -3,7 +3,7 @@ import { motion as Motion, AnimatePresence } from "motion/react";
 import { useLang, t } from "../App";
 import {
   Search, MapPin, Calendar, Clock, Globe, ChevronDown, Phone, X,
-  CheckCircle, ChevronLeft, ChevronRight, Plane, Tag, Sparkles, Filter, RotateCcw, SlidersHorizontal
+  CheckCircle, ChevronLeft, ChevronRight, Plane, Tag, Filter, RotateCcw, SlidersHorizontal
 } from "lucide-react";
 import {
   TourItem,
@@ -21,7 +21,7 @@ const PER_PAGE = 8;
 type SortOpt = "newest" | "price-asc" | "price-desc" | "duration-asc" | "name-az";
 
 const PAGE_TITLE: Record<string, { vi: string; en: string }> = {
-  "tour":                      { vi: "Khám Phá Tất Cả Tour Du Lịch",  en: "All Travel Tours" },
+  "tour":                      { vi: "Tất cả tour du lịch",           en: "All Travel Tours" },
   "tour-trong-nuoc":           { vi: "Tour Du Lịch Trong Nước",       en: "Domestic Tours" },
   "tour-mien-bac":             { vi: "Tour Du Lịch Miền Bắc",         en: "Northern Vietnam Tours" },
   "tour-mien-trung":           { vi: "Tour Du Lịch Miền Trung",       en: "Central Vietnam Tours" },
@@ -310,27 +310,19 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f0f6fa] via-[#f7fbf9] to-[#ffffff] pb-28">
-      {/* ── Subpage Header with Liquid Glass ambient glow ── */}
-      <div className="relative pt-10 pb-12 px-4 overflow-hidden bg-gradient-to-r from-[#003B5C] via-[#1e64ae] to-[#00A651]">
-        {/* Soft background light bubbles */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 left-10 w-72 h-72 bg-[#00E676]/20 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+    <div className="relative z-10 min-h-screen bg-transparent pb-28">
+      {/* ── Subpage Header sharing unified continuous backdrop ── */}
+      <div data-unified-hero-end className="pt-6 pb-7 md:pt-7 md:pb-8 px-4">
+        <div className="max-w-7xl mx-auto text-center">
           <Motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0.92 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white/95 text-xs font-bold uppercase tracking-widest mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#00E676]" />
-              <span>{t(lang, "Hành trình đẳng cấp · Giá tốt nhất", "Premium Tours · Best Prices")}</span>
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-3">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#003B5C] tracking-tight mb-1.5">
               {t(lang, pageTitle.vi, pageTitle.en)}
             </h1>
-            <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto font-medium">
+            <p className="text-[#134E6F] text-xs sm:text-sm md:text-[15px] max-w-2xl mx-auto font-medium">
               {t(
                 lang,
                 "Khám phá các điểm đến hot nhất mùa này với lịch trình chọn lọc kỹ lưỡng, dịch vụ trọn gói và hướng dẫn viên đồng hành tận tâm.",
@@ -341,8 +333,8 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-8">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-4 mt-5">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
             {/* ── Mobile Filter Trigger Button ── */}
             <div className="lg:hidden w-full flex items-center justify-between gap-3">
               <button
@@ -378,7 +370,7 @@ export function TourPage({ category = "tour", openForm }: { category?: string; o
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
-              className={`w-full lg:w-[320px] shrink-0 rounded-[2.2rem] p-6 lg:p-7 transition-all duration-300 lg:sticky lg:top-28 self-start z-30 bg-white border border-gray-100 shadow-[0_15px_45px_-10px_rgba(0,59,92,0.08)] ${
+              className={`w-full lg:w-[320px] shrink-0 rounded-[2.2rem] p-6 lg:p-7 transition-all duration-300 lg:sticky lg:top-6 self-start z-30 bg-white border border-gray-100 shadow-[0_15px_45px_-10px_rgba(0,59,92,0.08)] ${
                 mobileFilterOpen ? "block" : "hidden lg:block"
               }`}
             >
